@@ -1,36 +1,51 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { FaHome } from 'react-icons/fa';
 
 function Navbar() {
   return (
     <NavbarContainer>
-      <Name as={Link} to="/main">
-        MATCHROOMIE
-      </Name>
-      <PageLinks>
-        <NavButton as={Link} to="/match">
-          프로필 목록
-        </NavButton>
-        <NavButton as={Link} to="/profile">
-          프로필 세팅
-        </NavButton>
-        <NavButton as={Link} to="/community">
-          커뮤니티 게시글 목록
-        </NavButton>
-        <NavButton as={Link} to="/write">
-          커뮤니티 게시글 작성
-        </NavButton>
-        <NavButton as={Link} to="/login">
-          로그인
-        </NavButton>
-        <NavButton as={Link} to="/signup">
-          회원가입
-        </NavButton>
-        <NavButton as={Link} to="/forgotpw">
-          비밀번호 찾기
-        </NavButton>
-      </PageLinks>
+      <Top>
+        <LeftSection>
+          <Name as={Link} to="/main">
+            <HomeIcon />
+            M@tchRoomie
+          </Name>
+        </LeftSection>
+        <MidSection>
+          <Highlight>광운대학교 기숙사</Highlight> 룸메 매칭 서비스
+        </MidSection>
+        <RightSection>
+          <NavButton as={Link} to="/login">
+            LOGIN
+          </NavButton>
+          <NavButton as={Link} to="/signup">
+            SIGN UP
+          </NavButton>
+          <NavButton as={Link} to="/profile">
+            PROFILE
+          </NavButton>
+        </RightSection>
+      </Top>
+      <Bottom>
+        <BottomSection>
+          <NavButton as={Link} to="/community">
+            Community
+          </NavButton>
+          <NavButton as={Link} to="/match">
+            Matching
+          </NavButton>
+          <NavButton
+            as="a"
+            href="https://kw.happydorm.or.kr/00/0000.kmc"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            기숙사 홈페이지
+          </NavButton>
+        </BottomSection>
+      </Bottom>
     </NavbarContainer>
   );
 }
@@ -44,15 +59,78 @@ const NavbarContainer = styled.div`
   right: 0;
   width: 100%;
   z-index: 1000;
-  padding: 20px 0;
-  border-bottom: 3px solid #333;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Top = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin: 90px 20px;
+`;
+
+const Name = styled(Link)`
+  font-size: 33px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 50px;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: #333;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const HomeIcon = styled(FaHome)`
+  color: #a72b0c;
+  margin-right: 10px;
+  font-size: 40px;
+`;
+
+const LeftSection = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const MidSection = styled.div`
+  color: #333;
+  font-size: 27px;
+`;
+
+const Highlight = styled.span`
+  font-weight: bold;
+  font-size: 33px;
+  color: #a72b0c;
+  margin-right: 20px;
+`;
+
+const RightSection = styled.div`
+  display: flex;
+  gap: 15px;
+`;
+
+const Bottom = styled.div`
+  border-top: 5px solid #333;
+  border-bottom: 5px solid #333;
+  padding: 10px 40px;
+  background-color: white;
+`;
+
+const BottomSection = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
 `;
 
 const NavButton = styled.div`
   background: none;
   color: #333;
   border: none;
-  padding: 8px 15px;
+  padding: 8px 10px;
   margin: 0 10px;
   cursor: pointer;
   font-size: 23px;
@@ -61,27 +139,6 @@ const NavButton = styled.div`
     color: #333;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   }
-`;
-
-const Name = styled(Link)`
-  font-size: 43px;
-  color: #333;
-  text-decoration: none;
-  font-weight: 600;
-  margin-left: 130px;
-
-  &:hover {
-    color: #333;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const PageLinks = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
-  flex-wrap: wrap;
 `;
 
 export default Navbar;
