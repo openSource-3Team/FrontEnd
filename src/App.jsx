@@ -10,6 +10,7 @@ import Signup from './pages/Signup';
 import Forgotpw from './pages/Forgotpw';
 import Community from './pages/Community';
 import Write from './pages/Write';
+import styled from 'styled-components';
 
 function App() {
   return (

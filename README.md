@@ -13,6 +13,8 @@ npm install react-router-dom
 
 npm install styled-components
 
+# css 파일 따로 만들지 말고 꼭 styled-components 사용해서 작업해주세요 !!
+
 # 사이트 열기
 
 npm run dev
