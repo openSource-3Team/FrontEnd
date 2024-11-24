@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// App.jsx
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // react-router-dom 임포트
+import Navbar from './navbar/Navbar';
+import Main from './pages/Main';
+import Match from './pages/Match';
+import Profile from './pages/Profile';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Forgotpw from './pages/Forgotpw';
+import Community from './pages/Community';
+import Write from './pages/Write';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <Navbar />
+      <Container>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/match" element={<Match />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgotpw" element={<Forgotpw />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/write" element={<Write />} />
+        </Routes>
+      </Container>
+    </Router>
+  );
 }
 
-export default App
+export default App;
+const Container = styled.div`
+  margin: 220px 150px 0px 150px;
+
+  @media (max-width: 480px) {
+    margin: 0px 50px; /* 작은 화면에서는 더 좁은 여백 */
+  }
+`;
