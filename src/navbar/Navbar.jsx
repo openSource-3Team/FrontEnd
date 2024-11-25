@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { FaHome } from 'react-icons/fa';
+import { FaHome, FaUserCircle } from 'react-icons/fa';
 
 function Navbar() {
   return (
     <NavbarContainer>
       <Top>
         <LeftSection>
-          <Name as={Link} to="/main">
+          <Name as={Link} to="/">
             <HomeIcon />
             M@tchRoomie
           </Name>
@@ -20,12 +20,10 @@ function Navbar() {
           <NavButton as={Link} to="/login">
             LOGIN
           </NavButton>
-          <NavButton as={Link} to="/signup">
-            SIGN UP
-          </NavButton>
-          <NavButton as={Link} to="/profile">
+          <ProfileButton as={Link} to="/profile">
+            <ProfileIcon />
             PROFILE
-          </NavButton>
+          </ProfileButton>
         </RightSection>
       </Top>
       <Bottom>
@@ -50,6 +48,8 @@ function Navbar() {
   );
 }
 
+export default Navbar;
+
 // 스타일링
 const NavbarContainer = styled.div`
   background-color: white;
@@ -67,8 +67,7 @@ const Top = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  margin: 90px 20px;
+  padding: 90px 40px;
 `;
 
 const Name = styled(Link)`
@@ -86,12 +85,6 @@ const Name = styled(Link)`
   }
 `;
 
-const HomeIcon = styled(FaHome)`
-  color: #a72b0c;
-  margin-right: 10px;
-  font-size: 40px;
-`;
-
 const LeftSection = styled.div`
   display: flex;
   align-items: center;
@@ -99,13 +92,14 @@ const LeftSection = styled.div`
 const MidSection = styled.div`
   color: #333;
   font-size: 27px;
+  margin-right: 50px;
 `;
 
 const Highlight = styled.span`
   font-weight: bold;
   font-size: 33px;
   color: #a72b0c;
-  margin-right: 20px;
+  margin-right: 30px;
 `;
 
 const RightSection = styled.div`
@@ -114,9 +108,9 @@ const RightSection = styled.div`
 `;
 
 const Bottom = styled.div`
-  border-top: 5px solid #333;
-  border-bottom: 5px solid #333;
-  padding: 10px 40px;
+  border-top: 3px solid #333;
+  border-bottom: 3px solid #333;
+  padding: 20px 40px;
   background-color: white;
 `;
 
@@ -141,4 +135,33 @@ const NavButton = styled.div`
   }
 `;
 
-export default Navbar;
+const ProfileButton = styled(Link)`
+  display: flex;
+  align-items: center;
+  background: none;
+  color: #333;
+  border: none;
+  padding: 8px 10px;
+  margin: 0 10px;
+  cursor: pointer;
+  font-size: 23px;
+  text-decoration: none;
+
+  &:hover {
+    color: #333;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+/* 아이콘 */
+const HomeIcon = styled(FaHome)`
+  color: #a72b0c;
+  margin-right: 10px;
+  font-size: 40px;
+`;
+
+const ProfileIcon = styled(FaUserCircle)`
+  color: #a72b0c;
+  font-size: 30px;
+  margin-right: 5px;
+`;
