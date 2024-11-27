@@ -3,21 +3,10 @@ import styled from 'styled-components';
 import mainImage from '../images/main_img03.jpg'; // 이미지 파일 import
 
 function Main() {
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
     <MainContainer>
       <Header>
-        <HeaderBackground scrollY={scrollY}>
-          <HeaderImage src={mainImage} alt="배경 이미지" />
-        </HeaderBackground>
+        <HeaderImage src={mainImage} alt="배경 이미지" />
       </Header>
       <ContentContainer>
         <Content>
@@ -44,8 +33,9 @@ export default Main;
 
 // 스타일 정의
 const MainContainer = styled.div`
-  width: 100%;
+  width: 100vh; /* 부모 컨테이너 너비 100% */
   margin: 0 auto;
+  padding-top: 600px; /* 헤더 높이만큼 상단 여백 추가 */
 `;
 
 const Header = styled.div`
@@ -58,30 +48,17 @@ const Header = styled.div`
   z-index: -1;
 `;
 
-const HeaderBackground = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: -1;
-  background-color: #000;
-  opacity: ${({ scrollY }) => Math.max(1 - scrollY / 300, 0)};
-  transform: translateY(${({ scrollY }) => scrollY / 2}px);
-  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-`;
-
 const HeaderImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+  background-color: #000;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 `;
 
 const ContentContainer = styled.div`
+  width: 100vw; /* ContentContainer가 MainContainer의 너비 100%를 차지 */
   padding: 20px;
-  width: 100%;
-  margin-top: 600px; /* 헤더 높이만큼 여백 추가 */
   background-color: #fff;
   display: flex;
   flex-direction: column;
@@ -92,7 +69,7 @@ const ContentContainer = styled.div`
 
 const Content = styled.div`
   width: 100%;
-  max-width: 800px;
+
   h1 {
     font-size: 2.5rem;
     margin-bottom: 20px;
