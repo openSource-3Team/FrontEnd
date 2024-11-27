@@ -67,7 +67,7 @@ const Top = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 90px 40px;
+  padding: 50px 40px;
 `;
 
 const Name = styled(Link)`
@@ -108,9 +108,9 @@ const RightSection = styled.div`
 `;
 
 const Bottom = styled.div`
-  border-top: 3px solid #333;
-  border-bottom: 3px solid #333;
-  padding: 20px 40px;
+  border-top: 2px solid #333;
+  border-bottom: 2px solid #333;
+  padding: 10px 40px;
   background-color: white;
 `;
 
@@ -124,7 +124,7 @@ const NavButton = styled.div`
   background: none;
   color: #333;
   border: none;
-  padding: 8px 10px;
+  padding: 4px 10px;
   margin: 0 10px;
   cursor: pointer;
   font-size: 23px;
