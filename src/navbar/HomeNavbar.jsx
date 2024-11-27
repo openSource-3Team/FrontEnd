@@ -42,7 +42,7 @@ const NavbarContainer = styled.div`
   width: 100%;
   z-index: 1000;
   display: flex;
-  flex-direction: column;
+  justify-content: center; /* 가운데 정렬 */
 `;
 
 const Top = styled.div`
@@ -50,6 +50,8 @@ const Top = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 15px;
+  width: 100%; /* 부모 요소의 너비에 맞춤 */
+  position: relative; /* MidSection을 중앙에 고정하기 위한 설정 */
 `;
 
 const Name = styled(Link)`
@@ -71,34 +73,25 @@ const LeftSection = styled.div`
   display: flex;
   align-items: center;
 `;
+
 const MidSection = styled.div`
   color: #333;
-  font-size: 17px;
-  margin-right: 50px;
+  font-size: 20px;
+  position: absolute; /* 중앙 배치를 위해 위치 고정 */
+  left: 51.3%; /* 부모의 정중앙으로 이동 */
+  transform: translateX(-50%); /* 중앙 정렬을 위한 보정 */
+  text-align: center;
 `;
 
 const Highlight = styled.span`
   font-weight: bold;
-  font-size: 17px;
+
   color: #a72b0c;
-  margin-right: 30px;
+  margin-right: 10px;
 `;
 
 const RightSection = styled.div`
   display: flex;
-  gap: 15px;
-`;
-
-const Bottom = styled.div`
-  border-top: 3px solid #333;
-  border-bottom: 3px solid #333;
-  padding: 20px 40px;
-  background-color: white;
-`;
-
-const BottomSection = styled.div`
-  display: flex;
-  justify-content: flex-end;
   gap: 15px;
 `;
 
