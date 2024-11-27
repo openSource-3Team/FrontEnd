@@ -1,7 +1,13 @@
 // App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // react-router-dom 임포트
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom';
 import Navbar from './navbar/Navbar';
+import HomeNavbar from './navbar/HomeNavbar'; // HomeNavbar 임포트
 import Main from './pages/Main';
 import Match from './pages/Match';
 import Profile from './pages/Profile';
@@ -15,7 +21,18 @@ import styled from 'styled-components';
 function App() {
   return (
     <Router>
-      <Navbar />
+      <AppContent />
+    </Router>
+  );
+}
+
+function AppContent() {
+  const location = useLocation();
+  const isHomePath = location.pathname === '/'; // HomeNavbar를 렌더링할 경로 확인
+
+  return (
+    <>
+      {isHomePath ? <HomeNavbar /> : <Navbar />}
       <Container>
         <Routes>
           <Route path="/" element={<Main />} />
@@ -28,9 +45,10 @@ function App() {
           <Route path="/write" element={<Write />} />
         </Routes>
       </Container>
-    </Router>
+    </>
   );
 }
 
 export default App;
+
 const Container = styled.div``;
