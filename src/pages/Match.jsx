@@ -1,6 +1,7 @@
 // Match.jsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import tempImage from "../images/ppotto.png";
 
 function Match() {
   const [Click, setClick] = useState([]);
@@ -24,206 +25,275 @@ function Match() {
             <FilterValue
               onClick={() => wantOption('4개월')}
               selected={Click.includes('4개월')}
-            >
-              4개월
+            >4개월
             </FilterValue>
-            <FilterValue>6개월</FilterValue>
-            <FilterValue>12개월</FilterValue>
+            <FilterValue
+              onClick={() => wantOption('6개월')}
+              selected={Click.includes('6개월')}
+            >6개월
+            </FilterValue>
+            <FilterValue
+              onClick={() => wantOption('12개월')}
+              selected={Click.includes('12개월')}
+            >12개월
+            </FilterValue>
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>학과</FilterLabel>
           <FilterValues>
-            <FilterValue>컴퓨터정보공학부</FilterValue>
-            <FilterValue>소프트웨어학부</FilterValue>
-            <FilterValue>정보융합학부</FilterValue>
+            <FilterValue
+              onClick={() => wantOption('컴퓨터정보공학부')}
+              selected={Click.includes('컴퓨터정보공학부')}
+            >컴퓨터정보공학부</FilterValue>
+            <FilterValue
+              onClick={() => wantOption('소프트웨어학부')}
+              selected={Click.includes('소프트웨어학부')}
+            >소프트웨어학부</FilterValue>
+            <FilterValue
+              onClick={() => wantOption('정보융합학부')}
+              selected={Click.includes('정보융합학부')}
+            >정보융합학부</FilterValue>
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>학번</FilterLabel>
           <FilterValues>
-            <FilterValue>16학번</FilterValue>
-            <FilterValue>17학번</FilterValue>
-            <FilterValue>18학번</FilterValue>
-            <FilterValue>19학번</FilterValue>
-            <FilterValue>20학번</FilterValue>
-            <FilterValue>21학번</FilterValue>
-            <FilterValue>22학번</FilterValue>
-            <FilterValue>23학번</FilterValue>
-            <FilterValue>24학번</FilterValue>
+            {['16학번', '17학번', '18학번', '19학번', '20학번', '21학번', '22학번', '23학번', '24학번'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
-          <FilterLabel>루미의 기상시간이 언제였으면 좋겠나요?</FilterLabel>
+          <FilterLabel>원하는 루미의 기상시간을 선택해주세요.</FilterLabel>
           <FilterValues>
-            <FilterValue>07:00</FilterValue>
-            <FilterValue>08:00</FilterValue>
-            <FilterValue>09:00</FilterValue>
-            <FilterValue>10:00</FilterValue>
+            {['07:00', '08:00', '09:00', '10:00'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
-          <FilterLabel>취침시간</FilterLabel>
+          <FilterLabel>원하는 루미의 취침시간을 선택해주세요.</FilterLabel>
           <FilterValues>
-            <FilterValue
-              onClick={() => wantOption('22:00')}
-              selected={Click.includes('22:00')}
-            >
-              22:00
-            </FilterValue>
-            <FilterValue
-              onClick={() => wantOption('23:00')}
-              selected={Click.includes('23:00')}
-            >
-              23:00
-            </FilterValue>
-            <FilterValue
-              onClick={() => wantOption('24:00')}
-              selected={Click.includes('24:00')}
-            >
-              24:00
-            </FilterValue>
-            <FilterValue
-              onClick={() => wantOption('새벽')}
-              selected={Click.includes('새벽')}
-            >
-              새벽
-            </FilterValue>
+            {['22:00', '23:00', '24:00', '새벽'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
-          <FilterLabel>소등시간</FilterLabel>
+          <FilterLabel>원하는 루미의 소등시간 선택해주세요.</FilterLabel>
           <FilterValues>
-            <FilterValue>21:00</FilterValue>
-            <FilterValue>22:00</FilterValue>
-            <FilterValue>23:00</FilterValue>
-            <FilterValue>24:00</FilterValue>
+            {['21:00', '22:00', '23:00', '24:00'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>샤워시간</FilterLabel>
           <FilterValues>
-            <FilterValue>외출 전</FilterValue>
-            <FilterValue>귀가 후</FilterValue>
-            <FilterValue>둘 다</FilterValue>
+            {['외출 전', '귀가 후', '둘 다'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>흡연여부 (필수 택1)</FilterLabel>
           <FilterValues>
-            <FilterValue>흡연자</FilterValue>
-            <FilterValue>비흡연자</FilterValue>
+            {['흡연자', '비흡연자'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>이해할 수 있는 잠버릇을 선택해주세요.</FilterLabel>
           <FilterValues>
-            <FilterValue>코골이</FilterValue>
-            <FilterValue>이갈이</FilterValue>
-            <FilterValue>몽유벙</FilterValue>
-            <FilterValue>잠꼬대</FilterValue>
+            {['코골이', '이갈이', '몽유병', '잠꼬대'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>생활패턴</FilterLabel>
           <FilterValues>
-            <FilterValue>아침형</FilterValue>
-            <FilterValue>저녁형</FilterValue>
-            <FilterValue>새벽형</FilterValue>
+            {['아침형', '저녁형', '새벽형'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>알람소리</FilterLabel>
           <FilterValues>
-            <FilterValue>민감</FilterValue>
-            <FilterValue>둔감</FilterValue>
+            {['민감', '둔감'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>물건 공유 여부</FilterLabel>
           <FilterValues>
-            <FilterValue>공유해요</FilterValue>
-            <FilterValue>공유하기 싫어요</FilterValue>
-            <FilterValue>상관없어요(맞춰줄 수 있어요)</FilterValue>
+            {['공유해요', '공유하기 싫어요', '상관없어요(맞춰줄 수 있어요)'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>방에서 게임 가능?</FilterLabel>
           <FilterValues>
-            <FilterValue>PC 게임 가능해요</FilterValue>
-            <FilterValue>모바일 게임만 가능해요</FilterValue>
-            <FilterValue>가끔 이해할 수 있어요</FilterValue>
-            <FilterValue>아예 안돼요</FilterValue>
+            {['PC 게임 가능해요', '모바일 게임만 가능해요', '가끔 이해할 수 있어요', '아예 안돼요'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>루미가 방 안에서 공부해도 되나요</FilterLabel>
           <FilterValues>
-            <FilterValue>아예 안돼요</FilterValue>
-            <FilterValue>스탠드 켜고 하면 가능해요</FilterValue>
-            <FilterValue>불 켜고 해도 돼요</FilterValue>
+            {['아예 안돼요', '스탠드 켜고 하면 가능해요', '불 켜고 해도 돼요'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>방 안 섭취</FilterLabel>
           <FilterValues>
-            <FilterValue>아예 안돼요</FilterValue>
-            <FilterValue>간단한 간식 가능</FilterValue>
-            <FilterValue>식사 가능</FilterValue>
-            <FilterValue>음료 가능</FilterValue>
-            <FilterValue>배달음식 가능</FilterValue>
+            {['아예 안돼요', '간단한 간식 가능', '식사 가능', '음료 가능', '배달음식 가능'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>청소를 어느정도 하길 바라는지</FilterLabel>
           <FilterValues>
-            <FilterValue>매일 항상 깨끗이</FilterValue>
-            <FilterValue>2~3일에 한 번씩</FilterValue>
-            <FilterValue>일주일에 한 번</FilterValue>
-            <FilterValue>한 달에 한 번</FilterValue>
-            <FilterValue>아예 안해요</FilterValue>
+            {['매일 항상 깨끗이', '2~3일에 한 번씩', '일주일에 한 번', '한 달에 한 번', '아예 안해요'].map(item => (
+              <FilterValue
+                key={item}
+                onClick={() => wantOption(item)}
+                selected={Click.includes(item)}
+              >{item}</FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
           <FilterLabel>MBTI</FilterLabel>
           <FilterValues>
-            <FilterValue>ESTJ</FilterValue>
-            <FilterValue>ESTP</FilterValue>
-            <FilterValue>ESFJ</FilterValue>
-            <FilterValue>ESFP</FilterValue>
-            <FilterValue>ENTJ</FilterValue>
-            <FilterValue>ENTP</FilterValue>
-            <FilterValue>ENFJ</FilterValue>
-            <FilterValue>ENFP</FilterValue>
-            <FilterValue>ISTJ</FilterValue>
-            <FilterValue>ISTP</FilterValue>
-            <FilterValue>ISFJ</FilterValue>
-            <FilterValue>ISFP</FilterValue>
-            <FilterValue>INTJ</FilterValue>
-            <FilterValue>INTP</FilterValue>
-            <FilterValue>INFJ</FilterValue>
-            <FilterValue>INFP</FilterValue>
+            {['ESTJ', 'ESTP', 'ESFJ', 'ESFP', 'ENTJ', 'ENTP', 'ENFJ', 'ENFP', 'ISTJ', 'ISTP', 'ISFJ', 'ISFP', 'INTJ', 'INTP', 'INFJ', 'INFP'].map((value) => (
+              <FilterValue key={value} onClick={() => wantOption(value)} selected={Click.includes(value)}>
+                {value}
+              </FilterValue>
+            ))}
           </FilterValues>
         </FilterGroup>
       </Filter>
 
       <HorizonLine text="Roomie" />
+
       <ProfileContainer>
         <Profile>
-          <RommieImage />
-          <Roomie1>
-            <Roomie>김소정</Roomie>
-            <Roomie>21학번</Roomie>
-            <Roomie>컴퓨터정보공학부</Roomie>
-          </Roomie1>
+          <ProfileImage src={tempImage} alt="Roommate Profile" />
+          <RoomieBox>
+            <Roomietext>김소정</Roomietext>
+            <Roomietext>21학번</Roomietext>
+            <Roomietext>컴퓨터정보공학부</Roomietext>
+          </RoomieBox>
         </Profile>
         <Profile>
-          <RommieImage />
-          <Roomie1>
-            <Roomie>김소정</Roomie>
-            <Roomie>21학번</Roomie>
-            <Roomie>컴퓨터정보공학부</Roomie>
-          </Roomie1>
+          <ProfileImage src={tempImage} alt="Roommate Profile" />
+          <RoomieBox>
+            <Roomietext>정주연</Roomietext>
+            <Roomietext>22학번</Roomietext>
+            <Roomietext>컴퓨터정보공학부</Roomietext>
+          </RoomieBox>
+        </Profile>
+        <Profile>
+          <ProfileImage src={tempImage} alt="Roommate Profile" />
+          <RoomieBox>
+            <Roomietext>최현서</Roomietext>
+            <Roomietext>20학번</Roomietext>
+            <Roomietext>컴퓨터정보공학부</Roomietext>
+          </RoomieBox>
+        </Profile>
+        <Profile>
+          <ProfileImage src={tempImage} alt="Roommate Profile" />
+          <RoomieBox>
+            <Roomietext>황인규</Roomietext>
+            <Roomietext>21학번</Roomietext>
+            <Roomietext>컴퓨터정보공학부</Roomietext>
+          </RoomieBox>
+        </Profile>
+        <Profile>
+          <ProfileImage src={tempImage} alt="Roommate Profile" />
+          <RoomieBox>
+            <Roomietext>황인규</Roomietext>
+            <Roomietext>21학번</Roomietext>
+            <Roomietext>컴퓨터정보공학부</Roomietext>
+          </RoomieBox>
+        </Profile>
+        <Profile>
+          <ProfileImage src={tempImage} alt="Roommate Profile" />
+          <RoomieBox>
+            <Roomietext>황인규</Roomietext>
+            <Roomietext>21학번</Roomietext>
+            <Roomietext>컴퓨터정보공학부</Roomietext>
+          </RoomieBox>
+        </Profile>
+        <Profile>
+          <ProfileImage src={tempImage} alt="Roommate Profile" />
+          <RoomieBox>
+            <Roomietext>황인규</Roomietext>
+            <Roomietext>21학번</Roomietext>
+            <Roomietext>컴퓨터정보공학부</Roomietext>
+          </RoomieBox>
         </Profile>
       </ProfileContainer>
     </Container>
@@ -234,9 +304,9 @@ export default Match;
 
 // Styled-components
 const Container = styled.div`
-  width: 100vh;
+  width: 80%;
   padding: 20px; /* 내부 여백 */
-  margin-top:400px;
+  margin-top:200px;
   `;
 
 const Title = styled.h2`
@@ -246,11 +316,9 @@ const Title = styled.h2`
 
 const Filter = styled.div`
 justify-content: center;
-align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-left:20vh;
+display: flex;
+flex-direction: column;
+gap: 15px;
 `;
 
 const FilterGroup = styled.div`
@@ -270,20 +338,6 @@ const FilterValues = styled.div`
   gap: 10px;
 `;
 
-const FilterValuezz = styled.div`
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #a72b0c;
-    border: 1px solid #a72b0c;
-    color: #FFFFFF;
-  }
-`;
-
 const FilterValue = styled.div`
   padding: 5px 10px;
   border-radius: 5px;
@@ -297,34 +351,6 @@ const FilterValue = styled.div`
   &:hover {
     background-color: ${({ selected }) => (selected ? '#a72b0c' : '#f0f0f0')};
   }
-`;
-
-const ProfileContainer = styled.div`
-  display:flex;
-  flex-direction: row;
-  gap : 50px
-`;
-
-const Profile = styled.div`
-  display: flex;
-  align-items: center; /* 가로 중앙 정렬 */
-  margin-top: 30px;
-  padding: 20px;
-  border: 1px solid #a72b0c;
-  border-radius: 10px;
-  max-width: 600px;
-  background-color: white;
-`;
-
-const Roomie1 = styled.div`
-  display: flex;
-  flex-direction: column; /* 세로 정렬 */
-  gap: 10px; /* 각 항목 간의 간격 */
-`;
-
-const Roomie = styled.div`
-  font-size: 16px;
-  font-weight: 500;
 `;
 
 const HorizonLine = ({ text }) => {
@@ -343,23 +369,44 @@ const HorizonLine = ({ text }) => {
   );
 };
 
-const RommieImage = () => {
-  return (
-    <ImageContainer>
-      <img src="./images/ppotto.png" alt="루미 프로필 사진" />
-    </ImageContainer>
-  );
-};
+const ProfileContainer = styled.div`
+  display:flex;
+  flex-wrap: wrap; /* 줄 바꿈 허용 */
+  flex-direction: row;
+  width:100%;
+  padding:10px
+  gap:10px
+  
+`;
 
-const ImageContainer = styled.div`
+const Profile = styled.div`
   display: flex;
-  justify-content: center;
-    align-items: center; /* 세로 중앙 정렬 */
+  align-items: center; /* 가로 중앙 정렬 */
+  margin-top: 30px;
+  padding: 20px;
+  border: 1px solid #a72b0c;
+  border-radius: 10px;
+  width:350px;
+  background-color: white;
+  gap : 10px;
+  margin-right:10px;
+`;
 
-  img {
-    width: 120px; /* 사진 크기 */
-    height: 120px;
-    border-radius: 0%; /* 원형으로 표시 */
-    border: 1px solid #a72b0c; /* 테두리 */
-  }
+const RoomieBox = styled.div`
+  display: flex;
+  flex-direction: column; /* 세로 정렬 */
+  gap: 10px; /* 각 항목 간의 간격 */
+  width: 140px;
+`;
+
+const Roomietext = styled.div`
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+const ProfileImage = styled.img`
+  width: 150px;
+  height: 150px;
+  border-radius: 50%; /* 원형 이미지 */
+  object-fit: cover; /* 이미지 비율 유지 */
 `;
