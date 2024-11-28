@@ -404,7 +404,6 @@ const Roomietext = styled.div`
   font-weight: 500;
 `;
 
-
 const ProfileImage = styled.img`
   width: 150px;
   height: 150px;
