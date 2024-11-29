@@ -138,6 +138,8 @@ function Profile() {
 
     return (
         <div>
+            <Container>
+            <Content>
             <h1>프로필 세팅</h1>
             <p>여기에 사용자 프로필 설정 양식을 작성하세요.</p>
 
@@ -265,6 +267,8 @@ function Profile() {
                     ))}
                 </CheckBoxContainer>
             </OptionGroup>
+            </Content>
+        </Container>
         </div>
     );
 }
@@ -272,6 +276,24 @@ function Profile() {
 export default Profile;
 
 // Styled-components
+
+const Container = styled.div`
+    display: flex;
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    height: 100vh; /* 화면 전체 높이 */
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+    padding-top: 900px; /* 네비게이션 바 높이만큼 여백 추가 */
+`;
+
+const Content = styled.div`
+    max-width: 600px;
+    width: 100%;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
 
 const InputGroup = styled.div`
     margin-bottom: 15px;
