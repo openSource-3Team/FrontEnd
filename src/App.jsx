@@ -16,6 +16,7 @@ import Signup from './pages/Signup';
 import Forgotpw from './pages/Forgotpw';
 import Community from './pages/Community';
 import Write from './pages/Write';
+import PostView from './pages/PostView';
 import styled from 'styled-components';
 
 function App() {
@@ -43,6 +44,7 @@ function AppContent() {
           <Route path="/forgotpw" element={<Forgotpw />} />
           <Route path="/community" element={<Community />} />
           <Route path="/write" element={<Write />} />
+          <Route path="/postview" element={<PostView />} />
         </Routes>
       </Container>
     </>

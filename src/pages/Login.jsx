@@ -25,7 +25,7 @@ function Login() {
     if (validateForm()) {
       console.log('로그인 시도:', { id, password });
       alert('로그인 성공!');
-      navigate('/'); // 로그인 성공 후 홈 페이지로 이동
+      navigate('/profile'); // 로그인 성공 후 홈 페이지로 이동
     }
   };
 
@@ -70,14 +70,14 @@ function Login() {
 export default Login;
 
 const Container = styled.div`
-  width: 800px;
+  max-width: 800px;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
-  top: 40%;
-  right: 33%;
-  left: 33%;
+  top: 30%;
+  left: 32%;
 `;
 
 const Title = styled.div`
