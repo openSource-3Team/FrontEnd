@@ -17,10 +17,13 @@ function Match() {
 
   return (
     <Container>
-      <Title>매칭</Title>
+      <Explain>원하는 Roomie의 특징을 한 개 이상 선택해주세요! <br></br>
+        그럼 저희가 딱 맞는 Roomie를 Matching해줄게요 <br></br>
+        원하는 만큼 선택해도 좋아요.
+      </Explain>
       <Filter>
         <FilterGroup>
-          <FilterLabel>기숙사</FilterLabel>
+          <FilterLabel><br></br>기숙사 생활 기간</FilterLabel>
           <FilterValues>
             <FilterValue
               onClick={() => wantOption('4개월')}
@@ -69,7 +72,7 @@ function Match() {
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
-          <FilterLabel>원하는 루미의 기상시간을 선택해주세요.</FilterLabel>
+          <FilterLabel>기상시간</FilterLabel>
           <FilterValues>
             {['07:00', '08:00', '09:00', '10:00'].map(item => (
               <FilterValue
@@ -81,27 +84,53 @@ function Match() {
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
-          <FilterLabel>원하는 루미의 취침시간을 선택해주세요.</FilterLabel>
+          <FilterLabel>취침시간</FilterLabel>
           <FilterValues>
-            {['22:00', '23:00', '24:00', '새벽'].map(item => (
-              <FilterValue
-                key={item}
-                onClick={() => wantOption(item)}
-                selected={Click.includes(item)}
-              >{item}</FilterValue>
-            ))}
+            <FilterValue
+              onClick={() => wantOption('21:00')}
+              selected={Click.includes('21:00')}
+            >21:00
+            </FilterValue>
+            <FilterValue
+              onClick={() => wantOption('22:00')}
+              selected={Click.includes('22:00')}
+            >22:00
+            </FilterValue>
+            <FilterValue
+              onClick={() => wantOption('23:00')}
+              selected={Click.includes('23:00')}
+            >23:00
+            </FilterValue>
+            <FilterValue
+              onClick={() => wantOption('새벽')}
+              selected={Click.includes('새벽')}
+            >새벽
+            </FilterValue>
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
-          <FilterLabel>원하는 루미의 소등시간 선택해주세요.</FilterLabel>
+          <FilterLabel>소등시간</FilterLabel>
           <FilterValues>
-            {['21:00', '22:00', '23:00', '24:00'].map(item => (
-              <FilterValue
-                key={item}
-                onClick={() => wantOption(item)}
-                selected={Click.includes(item)}
-              >{item}</FilterValue>
-            ))}
+            <FilterValue
+              onClick={() => wantOption('21:00 ')}
+              selected={Click.includes('21:00 ')}
+            >21:00
+            </FilterValue>
+            <FilterValue
+              onClick={() => wantOption('22:00 ')}
+              selected={Click.includes('22:00 ')}
+            >22:00
+            </FilterValue>
+            <FilterValue
+              onClick={() => wantOption('23:00 ')}
+              selected={Click.includes('23:00 ')}
+            >23:00
+            </FilterValue>
+            <FilterValue
+              onClick={() => wantOption('24:00 ')}
+              selected={Click.includes('24:00 ')}
+            >24:00
+            </FilterValue>
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
@@ -117,7 +146,7 @@ function Match() {
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
-          <FilterLabel>흡연여부 (필수 택1)</FilterLabel>
+          <FilterLabel>흡연 여부</FilterLabel>
           <FilterValues>
             {['흡연자', '비흡연자'].map(item => (
               <FilterValue
@@ -129,7 +158,7 @@ function Match() {
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
-          <FilterLabel>이해할 수 있는 잠버릇을 선택해주세요.</FilterLabel>
+          <FilterLabel>잠버릇</FilterLabel>
           <FilterValues>
             {['코골이', '이갈이', '몽유병', '잠꼬대'].map(item => (
               <FilterValue
@@ -167,7 +196,7 @@ function Match() {
         <FilterGroup>
           <FilterLabel>물건 공유 여부</FilterLabel>
           <FilterValues>
-            {['공유해요', '공유하기 싫어요', '상관없어요(맞춰줄 수 있어요)'].map(item => (
+            {['공유해요', '공유하기 싫어요'].map(item => (
               <FilterValue
                 key={item}
                 onClick={() => wantOption(item)}
@@ -177,9 +206,9 @@ function Match() {
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
-          <FilterLabel>방에서 게임 가능?</FilterLabel>
+          <FilterLabel>방에서 게임</FilterLabel>
           <FilterValues>
-            {['PC 게임 가능해요', '모바일 게임만 가능해요', '가끔 이해할 수 있어요', '아예 안돼요'].map(item => (
+            {['PC 게임', '모바일 게임', '가끔 이해할 수 있어요', '아예 안돼요'].map(item => (
               <FilterValue
                 key={item}
                 onClick={() => wantOption(item)}
@@ -189,9 +218,9 @@ function Match() {
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
-          <FilterLabel>루미가 방 안에서 공부해도 되나요</FilterLabel>
+          <FilterLabel>방 안 공부</FilterLabel>
           <FilterValues>
-            {['아예 안돼요', '스탠드 켜고 하면 가능해요', '불 켜고 해도 돼요'].map(item => (
+            {['스탠드 켜고 하면 가능해요', '불 켜고 해도 돼요', '공부 안돼요'].map(item => (
               <FilterValue
                 key={item}
                 onClick={() => wantOption(item)}
@@ -201,9 +230,9 @@ function Match() {
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
-          <FilterLabel>방 안 섭취</FilterLabel>
+          <FilterLabel>방 안 음식물 섭취</FilterLabel>
           <FilterValues>
-            {['아예 안돼요', '간단한 간식 가능', '식사 가능', '음료 가능', '배달음식 가능'].map(item => (
+            {['음료', '간단한 간식', '식사', '배달음식', '섭취 안돼요'].map(item => (
               <FilterValue
                 key={item}
                 onClick={() => wantOption(item)}
@@ -213,7 +242,7 @@ function Match() {
           </FilterValues>
         </FilterGroup>
         <FilterGroup>
-          <FilterLabel>청소를 어느정도 하길 바라는지</FilterLabel>
+          <FilterLabel>청소 주기</FilterLabel>
           <FilterValues>
             {['매일 항상 깨끗이', '2~3일에 한 번씩', '일주일에 한 번', '한 달에 한 번', '아예 안해요'].map(item => (
               <FilterValue
@@ -302,16 +331,19 @@ function Match() {
 
 export default Match;
 
-// Styled-components
 const Container = styled.div`
-  width: 80%;
+  width: 100%;
   padding: 20px; /* 내부 여백 */
-  margin-top:200px;
-  `;
+  margin-top: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 모든 콘텐츠를 중앙 정렬 */
+`;
 
-const Title = styled.h2`
-  text-align: center;
-  margin-bottom: 20px;
+const Explain = styled.div`
+text-align: center;
+margin-bottom: 20px;
+margin-top: 20px;
 `;
 
 const Filter = styled.div`
@@ -319,12 +351,14 @@ justify-content: center;
 display: flex;
 flex-direction: column;
 gap: 15px;
+width:100%
 `;
 
 const FilterGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
+  margin : auto;
 `;
 
 const FilterLabel = styled.div`
@@ -353,43 +387,44 @@ const FilterValue = styled.div`
   }
 `;
 
-const HorizonLine = ({ text }) => {
-  return (
-    <div
-      style={{
-        width: "100%",
-        textAlign: "center",
-        borderBottom: "1px solid #aaa",
-        lineHeight: "0.1em",
-        margin: "50px 0 0px",
-      }}
-    >
-      <span style={{ background: "#fff", padding: "0 10px" }}>{text}</span>
-    </div>
-  );
-};
+const HorizonLineContainer = styled.div`
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid #aaa;
+  line-height: 0.1em;
+  margin: 50px 0 10px;
+`;
+
+const HorizonLineText = styled.span`
+  background: #fff;
+  padding: 0 10px;
+`;
+
+const HorizonLine = ({ text }) => (
+  <HorizonLineContainer>
+    <HorizonLineText>{text}</HorizonLineText>
+  </HorizonLineContainer>
+);
+
 
 const ProfileContainer = styled.div`
-  display:flex;
-  flex-wrap: wrap; /* 줄 바꿈 허용 */
-  flex-direction: row;
-  width:100%;
-  padding:10px
-  gap:10px
-  
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개씩 배치 */
+  justify-items: center; /* 각 아이템을 중앙에 정렬 */
+  width: 100%;
+  padding: 10px;
+  gap: 20px; /* 각 프로필 간격 */
 `;
 
 const Profile = styled.div`
   display: flex;
   align-items: center; /* 가로 중앙 정렬 */
-  margin-top: 30px;
   padding: 20px;
   border: 1px solid #a72b0c;
   border-radius: 10px;
-  width:350px;
   background-color: white;
-  gap : 10px;
-  margin-right:10px;
+  gap: 10px;
+  width: 300px; /* 각 프로필의 고정된 너비 설정 */
 `;
 
 const RoomieBox = styled.div`
@@ -405,8 +440,8 @@ const Roomietext = styled.div`
 `;
 
 const ProfileImage = styled.img`
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%; /* 원형 이미지 */
   object-fit: cover; /* 이미지 비율 유지 */
 `;
