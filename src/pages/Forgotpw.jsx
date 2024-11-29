@@ -52,14 +52,14 @@ export default Forgotpw;
 
 // 스타일 컴포넌트
 const Container = styled.div`
-  width: 800px;
+  max-width: 800px;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
-  top: 40%;
-  right: 33%;
-  left: 33%;
+  top: 30%;
+  left: 32%;
 `;
 
 const Form = styled.form`
