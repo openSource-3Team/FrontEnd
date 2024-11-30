@@ -15,6 +15,8 @@ npm install styled-components
 
 npm install react-icons
 
+npm install react-select
+
 # css 파일 따로 만들지 말고 꼭 styled-components 사용해서 작업해주세요 !!
 
 # 사이트 열기
