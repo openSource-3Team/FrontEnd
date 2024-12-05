@@ -17,6 +17,7 @@ import Forgotpw from './pages/Forgotpw';
 import Community from './pages/Community';
 import Write from './pages/Write';
 import PostView from './pages/PostView';
+import Roomie from './pages/Roomie';
 import styled from 'styled-components';
 
 function App() {
@@ -45,6 +46,7 @@ function AppContent() {
           <Route path="/community" element={<Community />} />
           <Route path="/write" element={<Write />} />
           <Route path="/postview" element={<PostView />} />
+          <Route path="/roomie" element={<Roomie />} />
         </Routes>
       </Container>
     </>
