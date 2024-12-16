@@ -256,6 +256,34 @@ function Profile() {
         });
     };
 
+    const handleSaveProfile = () => {
+        const profileData = {
+            userName,
+            profilePicture,
+            selectedGender,
+            selectedDorm,
+            selectedMajor,
+            selectedStudentNumber,
+            selectedBirthYear,
+            selectedIsSmoker,
+            selectedLifestyle,
+            selectedSleephabits,
+            selectedWakeup,
+            selectedGotobed,
+            selectedOfflight,
+            selectedAlarm,
+            selectedShare,
+            selectedGame,
+            selectedStudy,
+            selectedFood,
+            selectedCleaning,
+            selectedMbti,
+        };
+
+        console.log('저장된 프로필 데이터:', profileData);
+        alert('프로필이 저장되었습니다!');
+    };
+
     return (
         <>
         <GlobalStyle /> 
@@ -524,6 +552,8 @@ function Profile() {
                     options={options.mbti}
                     placeholder="MBTI를 선택하세요"
                 />
+                {/*저장 버튼*/}
+                <SaveButton onClick={handleSaveProfile}>프로필 저장</SaveButton>
 
             </OptionGroup>
             </Content>
@@ -612,4 +642,18 @@ const CheckBoxLabel = styled.label`
 
 const CheckBox = styled.input`
     margin-right: 5px;
+`;
+
+const SaveButton = styled.button`
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #a72b0c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    &:hover {
+        background-color: #a72b0c;
+    }
 `;
