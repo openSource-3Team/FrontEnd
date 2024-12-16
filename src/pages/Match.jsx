@@ -1,10 +1,9 @@
-// Match.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from "axios"; // axios 추가
 import { useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
-import tempImage from "../images/ppotto.png";
+import tempImage from '../images/ppotto.png';
 
-// 글로벌 스타일 설정
 const GlobalStyle = createGlobalStyle`
   html, body, #root {
     width: 100%;
@@ -18,17 +17,67 @@ const GlobalStyle = createGlobalStyle`
 
 function Match() {
   const [Click, setClick] = useState([]);
+  const [roomies, setRoomies] = useState([]); // Roomie 상태
+  const navigate = useNavigate();
 
+  // 필터 선택 함수
   const wantOption = (value) => {
     if (Click.includes(value)) {
       setClick(Click.filter((filter) => filter !== value));
-    }
-    else {
+    } else {
       setClick([...Click, value]);
     }
   };
 
-  const navigate = useNavigate();
+  // 필터 조건에 따라 서버에서 사용자 프로필 데이터 가져오기
+  const fetchRoomies = async () => {
+    try {
+      // 필터 조건을 요청 본문에 포함
+      const requestBody = {
+        dormitoryDuration: Click.filter((item) => ["4개월", "6개월", "12개월"].includes(item)),
+        department: Click.filter((item) => [
+          "전자정보공과대학",
+          "인공지능융합대학",
+          "공과대학",
+          "자연과학대학",
+          "경영대학",
+          "인문사회과학대학",
+          "정책법학대학",
+          "인제니움학부대학",
+        ].includes(item)),
+        studentId: Click.filter((item) => ["16학번", "17학번", "18학번", "19학번", "20학번", "21학번", "22학번", "23학번", "24학번"].includes(item)),
+        wakeUpTime: Click.filter((item) => ["07:00", "08:00", "09:00", "10:00"].includes(item)),
+        sleepingTime: Click.filter((item) => ["21:00", "22:00", "23:00", "새벽"].includes(item)),
+        lightOutTime: Click.filter((item) => ["21:00", "22:00", "23:00", "24:00"].includes(item)),
+        showerTime: Click.filter((item) => ["외출 전", "귀가 후", "둘 다"].includes(item)),
+        isSmoking: Click.filter((item) => ["흡연자", "비흡연자"].includes(item)).map((val) => val === "비흡연자" ? false : true), // true/false 변환
+        cleaningFrequency: Click.filter((item) => ["매일 항상 깨끗이", "2~3일에 한 번씩", "일주일에 한 번", "한 달에 한 번", "아예 안해요"].includes(item)),
+        itemSharingPreference: Click.filter((item) => ["공유해요", "공유하기 싫어요"].includes(item)),
+        gamePreference: Click.filter((item) => ["PC 게임", "모바일 게임", "가끔 이해할 수 있어요", "아예 안돼요"].includes(item)),
+        studyPreference: Click.filter((item) => ["스탠드 켜고 하면 가능해요", "불 켜고 해도 돼요", "공부 안돼요"].includes(item)),
+        foodPreference: Click.filter((item) => ["음료", "간단한 간식", "식사", "배달음식", "섭취 안돼요"].includes(item)),
+        lifestyle: Click.filter((item) => ["아침형", "저녁형", "새벽형"].includes(item)),
+        sleepingHabits: Click.filter((item) => ["코골이", "이갈이", "몽유병", "잠꼬대"].includes(item)),
+        acLevel: Click.filter((item) => ["민감", "둔감"].includes(item)),
+        mbti: Click.filter((item) => ["ESTJ", "ESTP", "ESFJ", "ESFP", "ENTJ", "ENTP", "ENFJ", "ENFP", "ISTJ", "ISTP", "ISFJ", "ISFP", "INTJ", "INTP", "INFJ", "INFP"].includes(item)),
+      };
+
+      // 서버 API 호출
+      const response = await axios.post(
+        "http://15.165.223.198:3000/users/filter",
+        requestBody
+      );
+
+      // 서버로부터 반환된 데이터 상태에 저장
+      setRoomies(response.data);
+    } catch (error) {
+      console.error("사용자 데이터 불러오기 실패:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoomies();
+  }, [Click]); // Click 상태가 바뀔 때마다 호출
 
   return (
     <>
@@ -42,21 +91,15 @@ function Match() {
           <FilterGroup>
             <FilterLabel><br></br>기숙사 생활 기간</FilterLabel>
             <FilterValues>
-              <FilterValue
-                onClick={() => wantOption('4개월')}
-                selected={Click.includes('4개월')}
-              >4개월
-              </FilterValue>
-              <FilterValue
-                onClick={() => wantOption('6개월')}
-                selected={Click.includes('6개월')}
-              >6개월
-              </FilterValue>
-              <FilterValue
-                onClick={() => wantOption('12개월')}
-                selected={Click.includes('12개월')}
-              >12개월
-              </FilterValue>
+              {["4개월", "6개월", "12개월"].map((value) => (
+                <FilterValue
+                  key={value}
+                  onClick={() => wantOption(value)}
+                  selected={Click.includes(value)}
+                >
+                  {value}
+                </FilterValue>
+              ))}
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
@@ -294,62 +337,19 @@ function Match() {
         <HorizonLine text="Roomie" />
 
         <ProfileContainer>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>김소정</Roomietext>
-              <Roomietext>21학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>정주연</Roomietext>
-              <Roomietext>22학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>최현서</Roomietext>
-              <Roomietext>20학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>황인규</Roomietext>
-              <Roomietext>21학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>황인규</Roomietext>
-              <Roomietext>21학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>황인규</Roomietext>
-              <Roomietext>21학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>황인규</Roomietext>
-              <Roomietext>21학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
+          {roomies.length > 0 ? (
+            roomies.map((roomie) => (
+              <Profile key={roomie.id} onClick={() => navigate(`/roomie/${roomie.id}`)}>
+                <ProfileImage src={roomie.imageUrl || tempImage} alt="Roomie Profile" />
+                <RoomieBox>
+                  <Roomietext>{roomie.name}</Roomietext>
+                  <Roomietext>{roomie.department}</Roomietext>
+                </RoomieBox>
+              </Profile>
+            ))
+          ) : (
+            <div>매칭된 Roomie가 없습니다. 필터를 선택해 주세요.</div>
+          )}
         </ProfileContainer>
       </Container>
     </>
@@ -394,7 +394,7 @@ const FilterGroup = styled.div`
 
 const FilterLabel = styled.div`
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
 `;
 
 const FilterValues = styled.div`
