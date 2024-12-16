@@ -1,10 +1,8 @@
-// Match.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
-import tempImage from "../images/ppotto.png";
+import tempImage from '../images/ppotto.png';
 
-// 글로벌 스타일 설정
 const GlobalStyle = createGlobalStyle`
   html, body, #root {
     width: 100%;
@@ -18,17 +16,52 @@ const GlobalStyle = createGlobalStyle`
 
 function Match() {
   const [Click, setClick] = useState([]);
+  const [roomies, setRoomies] = useState([]); // Roomie 상태
+  const navigate = useNavigate();
 
   const wantOption = (value) => {
     if (Click.includes(value)) {
       setClick(Click.filter((filter) => filter !== value));
-    }
-    else {
+    } else {
       setClick([...Click, value]);
     }
   };
 
-  const navigate = useNavigate();
+  const fetchRoomies = async () => {
+    try {
+      // 더미 데이터
+      const temp = [
+        {
+          id: 1,
+          name: '김소정',
+          department: '인공지능융합대학',
+          imageUrl: tempImage,
+          filters: ['인공지능융합대학', '21학번', 'INFP'], // Roomie의 필터 조건
+        },
+        {
+          id: 2,
+          name: '정주연',
+          department: '전자정보공과대학',
+          imageUrl: tempImage,
+          filters: ['전자정보공과대학', '22학번', 'ENTP'], // Roomie의 필터 조건
+        },
+      ];
+  
+      // 모든 선택된 필터 조건을 만족하는 Roomie만 필터링
+      const filteredRoomies = temp.filter((roomie) =>
+        Click.every((filter) => roomie.filters.includes(filter))
+      );
+  
+      setRoomies(filteredRoomies); // 필터링된 Roomie 설정
+    } catch (error) {
+      console.error('Roomie 데이터 로드 실패:', error);
+    }
+  };
+  
+
+  useEffect(() => {
+    fetchRoomies(); // 필터 상태가 변경될 때마다 호출
+  }, [Click]);
 
   return (
     <>
@@ -294,62 +327,19 @@ function Match() {
         <HorizonLine text="Roomie" />
 
         <ProfileContainer>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>김소정</Roomietext>
-              <Roomietext>21학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>정주연</Roomietext>
-              <Roomietext>22학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>최현서</Roomietext>
-              <Roomietext>20학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>황인규</Roomietext>
-              <Roomietext>21학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>황인규</Roomietext>
-              <Roomietext>21학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>황인규</Roomietext>
-              <Roomietext>21학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
-          <Profile onClick={() => navigate('/roomie')}>
-            <ProfileImage src={tempImage} alt="Roomie Profile" />
-            <RoomieBox>
-              <Roomietext>황인규</Roomietext>
-              <Roomietext>21학번</Roomietext>
-              <Roomietext>인공지능융합대학</Roomietext>
-            </RoomieBox>
-          </Profile>
+          {roomies.length > 0 ? (
+            roomies.map((roomie) => (
+              <Profile key={roomie.id} onClick={() => navigate(`/roomie/${roomie.id}`)}>
+                <ProfileImage src={roomie.imageUrl || tempImage} alt="Roomie Profile" />
+                <RoomieBox>
+                  <Roomietext>{roomie.name}</Roomietext>
+                  <Roomietext>{roomie.department}</Roomietext>
+                </RoomieBox>
+              </Profile>
+            ))
+          ) : (
+            <div>매칭된 Roomie가 없습니다. 필터를 선택해 주세요.</div>
+          )}
         </ProfileContainer>
       </Container>
     </>
