@@ -47,7 +47,7 @@ function AppContent() {
           <Route path="/community" element={<Community />} />
           <Route path="/write" element={<Write />} />
           <Route path="/write/:id" element={<Write />} />
-          <Route path="/postview/:id" element={<PostView />} />
+          <Route path="/postview/:postId" element={<PostView />} />
           <Route path="/notification" element={<Notification />} />
           <Route path="/roomie" element={<Roomie />} />
         </Routes>

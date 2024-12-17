@@ -239,6 +239,7 @@ const DeleteButton = styled(Button)`
 
   &:hover {
     background-color: #a72b0c;
+    border: 2px solid #a72b0c;
     color: white;
   }
 `;
