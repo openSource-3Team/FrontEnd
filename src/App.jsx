@@ -45,7 +45,7 @@ function AppContent() {
           <Route path="/forgotpw" element={<Forgotpw />} />
           <Route path="/community" element={<Community />} />
           <Route path="/write" element={<Write />} />
-          <Route path="/postview" element={<PostView />} />
+          <Route path="/postview/:id" element={<PostView />} />
           <Route path="/roomie" element={<Roomie />} />
         </Routes>
       </Container>
