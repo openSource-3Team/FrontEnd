@@ -18,12 +18,11 @@ function Navbar() {
         </MidSection>
         <RightSection>
           <NavButton as={Link} to="/login">
-            LOGIN
+            LOGIN 하러가기
           </NavButton>
-          <ProfileButton as={Link} to="/profile">
-            <ProfileIcon />
-            PROFILE
-          </ProfileButton>
+          <NavButton as={Link} to="/community">
+            COMMUNITY
+          </NavButton>
         </RightSection>
       </Top>
     </NavbarContainer>
@@ -55,7 +54,7 @@ const Top = styled.div`
 `;
 
 const Name = styled(Link)`
-  font-size: 17px;
+  font-size: 20px;
   color: #333;
   text-decoration: none;
   font-weight: 600;
