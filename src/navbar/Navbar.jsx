@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaHome, FaUserCircle } from 'react-icons/fa';
+import { FaHome, FaUserCircle, FaBell } from 'react-icons/fa';
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
   const navigate = useNavigate();
 
   // 컴포넌트가 마운트될 때 localStorage에서 userid 확인
@@ -15,11 +16,64 @@ function Navbar() {
     }
   }, []);
 
+  // 알림 개수 가져오기 함수 수정
+  const fetchNotifications = async () => {
+    const userId = localStorage.getItem('userid'); // 사용자 ID 가져오기
+    if (!userId) return;
+
+    try {
+      const response = await fetch(
+        `http://15.165.223.198:3000/users/received/${userId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data.result)) {
+          // 응답이 배열일 경우 개수를 설정
+          setNotificationCount(data.result.length || 0);
+        } else {
+          console.error('Unexpected response format:', data);
+          setNotificationCount(0); // 데이터 형식이 예상과 다를 경우 초기화
+        }
+      } else {
+        console.error('Failed to fetch notifications');
+        setNotificationCount(0); // 실패 시 초기화
+      }
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+      setNotificationCount(0); // 오류 시 초기화
+    }
+  };
+
+  // useEffect에 fetchNotifications 호출
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
   // 로그아웃 핸들러
   const handleLogout = () => {
     localStorage.removeItem('userid'); // 필요 시 다른 사용자 정보도 제거
     setIsLoggedIn(false);
-    navigate('/'); // 로그아웃 후 홈으로 이동
+    navigate('/login'); // 로그아웃 후 홈으로 이동
+  };
+
+  // 알림 클릭 핸들러
+  const handleNotificationClick = () => {
+    const userid = localStorage.getItem('userid'); // 로컬 스토리지에서 userid 확인
+
+    if (!userid) {
+      alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      navigate('/login'); // 로그인 페이지로 이동
+      return;
+    }
+
+    navigate('/notification'); // 알림 페이지로 이동
   };
 
   return (
@@ -47,6 +101,10 @@ function Navbar() {
               <ProfileIcon />
               PROFILE
             </ProfileButton>
+            <NotificationWrapper onClick={handleNotificationClick}>
+              <NotificationIcon />
+              {notificationCount > 0 && <Badge>{notificationCount}</Badge>}
+            </NotificationWrapper>
           </>
         </RightSection>
       </Top>
@@ -162,7 +220,7 @@ const Highlight = styled.span`
 const RightSection = styled.div`
   display: flex;
   gap: 15px;
-
+  margin: 0 20px;
   /* On smaller screens, center the elements */
   @media (max-width: 768px) {
     justify-content: center;
@@ -226,7 +284,7 @@ const ProfileButton = styled(Link)`
   color: #333;
   border: none;
   padding: 8px 10px;
-  margin: 0 10px;
+  margin: 0 20px;
   cursor: pointer;
   font-size: 20px;
   text-decoration: none;
@@ -244,7 +302,35 @@ const ProfileButton = styled(Link)`
   }
 `;
 
-// 새로운 스타일: LogoutButton
+const NotificationWrapper = styled.div`
+  margin: 0 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
+const NotificationIcon = styled(FaBell)`
+  font-size: 25px;
+  color: #333;
+`;
+
+const Badge = styled.div`
+  position: absolute;
+  top: 1px;
+  right: -7px;
+  background-color: #a72b0c; /* 배경색 */
+  color: white; /* 텍스트 색상 */
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 100%;
+  padding: 3px 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const LogButton = styled.div`
   background: none;
   color: #a72b0c;
