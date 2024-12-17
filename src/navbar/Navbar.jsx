@@ -268,13 +268,6 @@ const NavButton = styled.div`
     color: #333;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   }
-
-  /* Responsive font and margin */
-  @media (max-width: 768px) {
-    font-size: 18px;
-    margin: 0;
-    padding: 4px 8px;
-  }
 `;
 
 const ProfileButton = styled(Link)`
@@ -292,13 +285,6 @@ const ProfileButton = styled(Link)`
   &:hover {
     color: #333;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Responsive font and margin */
-  @media (max-width: 768px) {
-    font-size: 18px;
-    margin: 0;
-    padding: 4px 8px;
   }
 `;
 
@@ -347,12 +333,6 @@ const LogButton = styled.div`
     background-color: #a72b0c;
     color: white;
   }
-
-  /* Responsive font and margin */
-  @media (max-width: 768px) {
-    font-size: 18px;
-    padding: 6px 12px;
-  }
 `;
 
 // 아이콘
@@ -360,22 +340,10 @@ const HomeIcon = styled(FaHome)`
   color: #a72b0c;
   margin-right: 10px;
   font-size: 27px;
-
-  /* Responsive icon size */
-  @media (max-width: 768px) {
-    font-size: 25px;
-    margin-right: 5px;
-  }
 `;
 
 const ProfileIcon = styled(FaUserCircle)`
   color: #a72b0c;
   font-size: 23px;
   margin-right: 5px;
-
-  /* Responsive icon size */
-  @media (max-width: 768px) {
-    font-size: 20px;
-    margin-right: 5px;
-  }
 `;
