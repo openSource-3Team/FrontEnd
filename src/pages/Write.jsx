@@ -7,19 +7,42 @@ function Write() {
   const [content, setContent] = useState('');
   const navigate = useNavigate();
 
-  // 제출 버튼 클릭 시 /community로 이동
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 게시글 작성 후 이동
-    navigate('/community');
-    history.push('/community');
+
+    // 로컬 스토리지에서 userid
+    const userid = localStorage.getItem('userid');
+    console.log(userid);
+    // 서버로 POST 요청
+    try {
+      const response = await fetch('http://15.165.223.198:3000/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, content, userid }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('게시글 생성 성공:', data);
+        // 게시글 작성 후 커뮤니티 페이지로 이동
+        navigate('/community');
+      } else {
+        console.error('게시글 생성 실패');
+        alert('게시글 생성에 실패했습니다. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error('게시글 생성 중 오류:', error);
+      alert('서버 오류: 잠시 후 다시 시도해주세요.');
+    }
   };
 
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
         <Title>커뮤니티 게시글 작성</Title>
-
+        <Description>기숙사 학생들과 자유롭게 생각을 공유해보세요!</Description>
         <Label htmlFor="title">제목</Label>
         <Input
           id="title"
@@ -49,7 +72,7 @@ const Container = styled.div`
   max-width: 1200px;
   width: 100%;
   position: absolute;
-  top: 30%;
+  top: 23%;
   left: 50%;
   transform: translateX(-50%);
   padding: 20px;
@@ -65,19 +88,24 @@ const Form = styled.form`
 
 const Title = styled.h1`
   text-align: center;
-  font-size: 27px;
-  margin-bottom: 20px;
+  font-size: 25px;
+`;
+
+const Description = styled.p`
+  font-size: 20px;
+  text-align: center;
+  color: #777;
+  margin-bottom: 30px;
 `;
 
 const Label = styled.label`
-  font-size: 23px;
+  font-size: 17px;
   margin-bottom: 5px;
 `;
 
 const Input = styled.input`
   padding: 20px;
-  font-size: 18px;
-
+  font-size: 17px;
   border: 2px solid #a72b0c;
   border-radius: 8px;
   margin-bottom: 15px;
@@ -92,7 +120,7 @@ const Input = styled.input`
 
 const TextArea = styled.textarea`
   padding: 20px;
-  font-size: 19px;
+  font-size: 17px;
   border: 2px solid #a72b0c;
   border-radius: 8px;
   margin-bottom: 20px;
@@ -100,6 +128,7 @@ const TextArea = styled.textarea`
   height: 200px;
   box-sizing: border-box;
   font-family: 'Arial', sans-serif;
+
   &:focus {
     outline: none;
     border-color: #87200a;
