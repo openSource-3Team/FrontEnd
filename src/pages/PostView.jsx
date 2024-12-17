@@ -7,8 +7,15 @@ function PostView() {
   const navigate = useNavigate();
   const { id } = useParams(); // URL 파라미터에서 id 추출
   const [post, setPost] = useState(null);
+  const [userid, setUserid] = useState(null); // 로컬 스토리지에서 userid 저장
 
   useEffect(() => {
+    // 로컬 스토리지에서 userid 가져오기
+    const storedUserid = localStorage.getItem('userid');
+    if (storedUserid) {
+      setUserid(parseInt(storedUserid, 10)); // 문자열을 정수로 변환
+    }
+
     const fetchPost = async () => {
       try {
         const response = await fetch(`http://15.165.223.198:3000/posts/${id}`, {
@@ -42,6 +49,10 @@ function PostView() {
   const goBack = () => {
     navigate('/community');
   };
+  // 수정 버튼 클릭 시 /edit/:id로 이동
+  const handleEdit = () => {
+    navigate(`/write/${id}`);
+  };
 
   // post가 로딩 중이거나 없는 경우 처리
   if (post === null) {
@@ -69,6 +80,20 @@ function PostView() {
         <PostContent>{post.content}</PostContent>
 
         <ButtonGroup>
+          {/* 작성자와 현재 로그인된 사용자 ID가 같을 때만 수정 버튼 표시 */}
+          {userid === post.authorId && (
+            <Button
+              onClick={handleEdit}
+              style={{
+                backgroundColor: 'white',
+                border: '2px solid #a72b0c',
+                color: '#a72b0c',
+                marginRight: '10px',
+              }}
+            >
+              수정 / 삭제
+            </Button>
+          )}
           <Button onClick={goBack}>돌아가기</Button>
         </ButtonGroup>
       </PostCard>
