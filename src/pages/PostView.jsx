@@ -71,6 +71,11 @@ function PostView() {
   }, [postId]);
 
   const handleAddComment = async () => {
+    if (!userid) {
+      alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      navigate('/login'); // 로그인 페이지로 이동
+      return;
+    }
     if (!newComment.trim()) return;
 
     try {
@@ -235,7 +240,6 @@ function PostView() {
             )}
             <Button onClick={goBack}>돌아가기</Button>
           </RightGroup>
-         
         </ButtonGroup>
 
         <CommentsSection>
@@ -447,4 +451,3 @@ const LikeCount = styled.span`
   font-size: 16px;
   color: #333;
 `;
-
