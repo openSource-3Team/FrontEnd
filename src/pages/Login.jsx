@@ -6,6 +6,7 @@ function Login() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState('');
   const navigate = useNavigate(); // useNavigate 훅을 사용하여 네비게이션 처리
 
   const validateForm = () => {
@@ -20,12 +21,36 @@ function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setApiError('');
+
     if (validateForm()) {
-      console.log('로그인 시도:', { id, password });
-      alert('로그인 성공!');
-      navigate('/profile'); // 로그인 성공 후 홈 페이지로 이동
+      try {
+        const response = await fetch('http://15.165.223.198:3000/users/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: id, password }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('로그인 성공', data.result);
+
+          localStorage.setItem('userid', data.result.id);
+          alert('로그인 성공!');
+          // 새로고침 및 프로필 페이지로 이동
+          window.location.href = '/profile';
+        } else {
+          // 인증 실패
+          alert(' 아이디 또는 비밀번호를 확인해주세요');
+        }
+      } catch (error) {
+        console.error('로그인 요청 중 에러:', error);
+        setApiError('서버 에러: 잠시 후 다시 시도해주세요.');
+      }
     }
   };
 
@@ -33,12 +58,15 @@ function Login() {
     <Container>
       <Form onSubmit={handleSubmit}>
         <Title>로그인</Title>
+        <Description>
+          M@tchRoomie와 함께 룸메이트를 찾고 커뮤니티를 즐길 수 있어요!
+        </Description>
         <InputGroup>
           <Input
             type="text"
             value={id}
             onChange={(e) => setId(e.target.value)}
-            placeholder="ID"
+            placeholder="ID (email)"
           />
           {errors.id && <ErrorMessage>{errors.id}</ErrorMessage>}
         </InputGroup>
@@ -51,6 +79,9 @@ function Login() {
           />
           {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
         </InputGroup>
+
+        {apiError && <ErrorMessage>{apiError}</ErrorMessage>}
+
         <Options>
           <Link to="/forgotpw">
             <ForgotPassword>Forgot Password?</ForgotPassword>
@@ -77,15 +108,21 @@ const Container = styled.div`
   align-items: center;
   position: fixed;
   top: 30%;
-  left: 32%;
+  left: 30%;
 `;
 
 const Title = styled.div`
-  font-size: 34px;
+  font-size: 27px;
   color: #333;
-  margin-bottom: 60px;
+
   font-weight: 600;
   text-align: center;
+`;
+const Description = styled.p`
+  font-size: 20px;
+  text-align: center;
+  color: #777;
+  margin-bottom: 60px;
 `;
 
 const Form = styled.form`
@@ -146,7 +183,7 @@ const ButtonGroup = styled.div`
 const LoginButton = styled.button`
   flex: 1;
   padding: 10px 20px;
-  font-size: 23px;
+  font-size: 20px;
   color: white;
   background-color: #a72b0c;
   border: none;
@@ -161,7 +198,7 @@ const LoginButton = styled.button`
 const SignUpButton = styled.div`
   flex: 1;
   padding: 10px 20px;
-  font-size: 23px;
+  font-size: 20px;
   color: #a72b0c;
   background-color: white;
   border: 2px solid #a72b0c;
