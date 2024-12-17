@@ -7,7 +7,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import Navbar from './navbar/Navbar';
-import HomeNavbar from './navbar/HomeNavbar'; // HomeNavbar 임포트
+import HomeNavbar from './navbar/HomeNavbar';
 import Main from './pages/Main';
 import Match from './pages/Match';
 import Profile from './pages/Profile';
@@ -18,6 +18,7 @@ import Community from './pages/Community';
 import Write from './pages/Write';
 import PostView from './pages/PostView';
 import Roomie from './pages/Roomie';
+import Notification from './pages/Notification';
 import styled from 'styled-components';
 
 function App() {
@@ -45,7 +46,9 @@ function AppContent() {
           <Route path="/forgotpw" element={<Forgotpw />} />
           <Route path="/community" element={<Community />} />
           <Route path="/write" element={<Write />} />
-          <Route path="/postview/:id" element={<PostView />} />
+          <Route path="/write/:id" element={<Write />} />
+          <Route path="/postview/:postId" element={<PostView />} />
+          <Route path="/notification" element={<Notification />} />
           <Route path="/roomie" element={<Roomie />} />
         </Routes>
       </Container>

@@ -57,7 +57,6 @@ function PostView() {
 
         if (response.ok) {
           const data = await response.json();
-
           setComments(data.result?.reverse() || []);
         } else {
           console.error('댓글 조회 실패');
@@ -151,7 +150,6 @@ function PostView() {
       console.error('댓글 수정 중 오류:', error);
     }
   };
-
   const handleLike = async () => {
     const endpoint = userLiked
       ? `http://15.165.223.198:3000/posts/${postId}/dislike`
@@ -237,6 +235,7 @@ function PostView() {
             )}
             <Button onClick={goBack}>돌아가기</Button>
           </RightGroup>
+         
         </ButtonGroup>
 
         <CommentsSection>
@@ -290,8 +289,10 @@ const Container = styled.div`
   width: 210vh;
   display: flex;
   justify-content: center;
+
   align-items: flex-start; /* 상단 여백 조정 */
   margin-top: 200px; /* 네브바와 겹치지 않도록 여백 추가 */
+
   font-family: 'Arial', sans-serif;
 
   /* 반응형 고려 */
@@ -446,3 +447,4 @@ const LikeCount = styled.span`
   font-size: 16px;
   color: #333;
 `;
+
