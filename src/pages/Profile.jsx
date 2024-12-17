@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Select from 'react-select';
 import styled, { createGlobalStyle } from 'styled-components';
 import axios from 'axios';
+import { FaUserCircle } from 'react-icons/fa';
 
 const options = {
     gender: [
@@ -163,67 +164,18 @@ function Profile() {
 
     // New states for name and profile picture
     const [userName, setUserName] = useState('');
-    const [profilePicture, setProfilePicture] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState(null);
     const [phoneNumber, setPhoneNumber] = useState('');
 
-    const uploadImage = async (file) => {
-        const formData = new FormData();
-        formData.append("imageData", file);
+    const [profileImage, setProfileImage] = useState(null); // Default image state
 
-        try {
-            console.log("전송 데이터 확인:");
-            for (let [key, value] of formData.entries()) {
-                console.log(`${key}:`, value);
-            }
-            const response = await axios.post("http://15.165.223.198:3000/upload", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data", // axios가 자동으로 Content-Type 설정
-                },
-            });
-            console.log("이미지 업로드 성공:", response.data);
-            return response.data.imageUrl;
-        } catch (error) {
-            console.error("이미지 업로드 실패:", error.response?.data || error.message);
-            alert(`이미지 업로드에 실패했습니다: ${error.response?.data?.message || "서버 오류"}`);
-            return null;
-        }
-    };
-
-    const fileToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
             const reader = new FileReader();
+            reader.onload = () => setProfileImage(reader.result);
             reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
-    };
-
-    const handleProfilePictureChange = async (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        if (!file.type.startsWith("image/")) {
-            alert("이미지 파일만 업로드할 수 있습니다.");
-            return;
-        }
-
-        try {
-            const base64Image = await fileToBase64(file);
-            console.log("Base64 이미지 확인:", base64Image);
-            setProfilePicture(base64Image); // Base64로 상태 업데이트
-        } catch (error) {
-            console.error("이미지 변환 실패:", error);
-            alert("이미지 변환에 실패했습니다.");
         }
     };
-    useEffect(() => {
-        return () => {
-            if (previewUrl) {
-                URL.revokeObjectURL(previewUrl);
-            }
-        };
-    }, [previewUrl]);
 
     const handleCheckboxChange = (event, setter) => {
         const { value, checked } = event.target;
@@ -292,54 +244,63 @@ function Profile() {
     const handleSaveProfile = async () => {
 
         const userid = localStorage.getItem('userid');
-        const url = `http://15.165.223.198:3000/users/${userid}/profile`;
-
-        if (!profilePicture) {
-            alert("이미지를 먼저 업로드해주세요.");
+        if (!userid) {
+            alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
             return;
         }
+        const url = `http://15.165.223.198:3000/users/${userid}/profile`;
 
-        const formData = new FormData();
+        const profileData = {
+            name: userName?.trim() || "John Doe",
+            gender: selectedGender || null,
+            phoneNumber: phoneNumber?.trim() || "010-1234-5678",
+            dormitoryDuration: selectedDorm?.value || null,
+            department: selectedMajor?.value || null,
+            studentId: selectedStudentNumber?.value || null,
+            lifestyle: selectedLifestyle || null,
+            isSmoking: selectedIsSmoker === "흡연자" ? true : false,
+            wakeUpTime: selectedWakeup || null,
+            sleepingTime: selectedGotobed || null,
+            lightOutTime: selectedOfflight || null, // Avoid empty string
+            showerTime: selectedShowerTime || null,
+            cleaningFrequency: selectedCleaning?.value || null,
+            itemSharingPreference: selectedShare || null,
+            alarm: selectedAlarm || null,
+            mbti: selectedMbti?.value || null,
+            sleepingHabits: selectedSleephabits.length ? selectedSleephabits : null,
+            gamePreferences: selectedGame.length ? selectedGame : null,
+            studyPreferences: selectedStudy.length ? selectedStudy : null,
+            foodPreferences: selectedFood.length ? selectedFood : null,
+        };
 
-        formData.append("name", userName?.trim() || "John Doe");
-        formData.append("email", userid);
-
-        formData.append("gender", selectedGender || "");
-        formData.append("phoneNumber", phoneNumber?.trim() || "010-1234-5678");
-        formData.append("dormitoryDuration", selectedDorm?.value || "");
-        formData.append("department", selectedMajor?.value || "");
-        formData.append("studentId", selectedStudentNumber?.value || "");
-        formData.append("lifestyle", selectedLifestyle || "");
-        formData.append("isSmoking", selectedIsSmoker === "흡연자" ? true : false);
-        formData.append("wakeUpTime", selectedWakeup || "");
-        formData.append("sleepingTime", selectedGotobed || "");
-        formData.append("lightOutTime", selectedOfflight || "");
-        formData.append("showerTime", selectedShowerTime || "");
-        formData.append("cleaningFrequency", selectedCleaning?.value || "");
-        formData.append("itemSharingPreference", selectedShare || "");
-        formData.append("alarm", selectedAlarm || "");
-        formData.append("mbti", selectedMbti?.value || "");
-
-        selectedSleephabits?.forEach((sleephabits) => formData.append("sleepingHabits", sleephabits));
-        selectedGame?.forEach((game) => formData.append("gamePreferences", game));
-        selectedStudy?.forEach((study) => formData.append("studyPreferences", study));
-        selectedFood?.forEach((food) => formData.append("foodPreferences", food));
-
-        console.log("FormData 확인:");
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
-        }
+        console.log("profileData 확인:", profileData);
 
         try {
-            const response = await axios.post(url, formData, {
-                headers: { "Content-Type": "multipart/form-data" }
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(profileData), // Convert the payload to JSON string
             });
-            console.log('프로필 저장 성공:', response.data);
-            alert('프로필이 성공적으로 저장되었습니다!');
+
+            if (!response.ok) {
+                let errorMessage = "서버 오류 발생";
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch {
+                    console.error("Error parsing error response");
+                }
+                throw new Error(errorMessage);
+            }
+
+            const responseData = await response.json();
+            console.log("프로필 저장 성공:", responseData);
+            alert("프로필이 성공적으로 저장되었습니다!");
         } catch (error) {
-            const errorMessage = error.response?.data?.message || error.response?.data || error.message || "알 수 없는 오류 발생";
-            console.error("프로필 저장 실패:", errorMessage);
-            alert(`저장 실패: ${errorMessage}`);
+            console.error("프로필 저장 실패:", error.message);
+            alert(`저장 실패: ${error.message}`);
         }
     };
 
@@ -350,6 +311,17 @@ function Profile() {
                 <Container>
                     <Content>
                         <h1>프로필 세팅</h1>
+
+                        {/* Profile Image Section */}
+                        <InputGroup>
+                            <ProfileImageContainer>
+                                {profileImage ? (
+                                    <PreviewImage src={profileImage} alt="Profile" />
+                                ) : (
+                                    <FaUserCircle size={100} color="#ccc" /> // Default icon
+                                )}
+                            </ProfileImageContainer>
+                        </InputGroup>
 
                         {/* New fields for name and profile picture */}
                         {/* User name input */}
@@ -362,20 +334,6 @@ function Profile() {
                                 onChange={(e) => setUserName(e.target.value)}
                                 placeholder="이름을 입력하세요"
                             />
-                        </InputGroup>
-
-                        {/* Profile picture upload */}
-                        <InputGroup>
-                            <label htmlFor="profilePicture">프로필 사진:</label>
-                            <FileInput
-                                type="file"
-                                id="profilePicture"
-                                onChange={handleProfilePictureChange}
-                                accept="image/*"
-                            />
-                            {previewUrl && (
-                                <PreviewImage src={previewUrl} alt="Profile Preview" />
-                            )}
                         </InputGroup>
 
                         <InputGroup>
@@ -669,7 +627,7 @@ const Container = styled.div`
     align-items: center; /* 세로 중앙 정렬 */
     height: 100vh; /* 화면 전체 높이 */
     box-sizing: border-box; /* 패딩 포함 크기 계산 */
-    padding-top: 1700px; /* 네비게이션 바 높이만큼 여백 추가 */
+    padding-top: 1750px; /* 네비게이션 바 높이만큼 여백 추가 */
 `;
 
 const Content = styled.div`
@@ -696,6 +654,15 @@ const TextInput = styled.input`
 
 const FileInput = styled.input`
     margin-top: 5px;
+`;
+
+const ProfileImageContainer = styled.div`
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
 `;
 
 const PreviewImage = styled.img`
