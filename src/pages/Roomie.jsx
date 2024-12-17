@@ -1,8 +1,9 @@
 //Roomie.jsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import tempImage from "../images/ppotto.png";
+
 
 // 글로벌 스타일 설정
 const GlobalStyle = createGlobalStyle`
@@ -17,61 +18,94 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function Roomie() {
-    const navigate = useNavigate();
+  const { id } = useParams(); // URL 파라미터에서 ID 가져오기
+  const navigate = useNavigate();
+  const [roomieData, setRoomieData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    // 임시 데이터 (프로필 정보)
-    const roomieData = {
-        name: '김소정',
-        year: '21학번',
-        department: '인공지능융합대학',
-        dormPeriod: '6개월',
-        wakeUpTime: '09:00',
-        sleepTime: '23:00',
-        lightsOut: '22:00',
-        showerTime: '귀가 후',
-        smoking: '비흡연자',
-        sleepHabit: ['없음','잠꼬대'],
-        lifestyle: '아침형',
-        alarmSensitivity: '둔감',
-        shareItems: '공유해요',
-        gaming: 'PC 게임',
-        studying: '불 켜고 해도 돼요',
-        eating: '간단한 간식',
-        cleaningFrequency: '일주일에 한 번',
-        mbti: 'INFP'
+
+  // 사용자 데이터 가져오기
+  useEffect(() => {
+    const fetchRoomieData = async () => {
+      try {
+        const response = await fetch(`http://15.165.223.198:3000/users/${id}`);
+        console.log("API 호출 URL:", `http://15.165.223.198:3000/users/${id}`);
+        if (!response.ok) {
+          throw new Error(`사용자 정보를 불러오지 못했습니다. 상태 코드: ${response.status}`);
+        }
+        const data = await response.json();
+        setRoomieData(data.result);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    
+    fetchRoomieData();
+  }, [id]);
 
-    return (
-        <>
-        <GlobalStyle />
-        <Container>
-            <ProfileImage src={tempImage} alt="Roommate Profile" />
-            <ProfileInfo>
-                <ProfileText> {roomieData.name}</ProfileText>
-                <ProfileText> {roomieData.year}</ProfileText>
-                <ProfileText> {roomieData.department}</ProfileText>
-                <ProfileText> {roomieData.dormPeriod}</ProfileText>
-                <ProfileText> {roomieData.wakeUpTime}</ProfileText>
-                <ProfileText> {roomieData.sleepTime}</ProfileText>
-                <ProfileText> {roomieData.lightsOut}</ProfileText>
-                <ProfileText> {roomieData.showerTime}</ProfileText>
-                <ProfileText> {roomieData.smoking}</ProfileText>
-                <ProfileText> {roomieData.sleepHabit.join(', ')}</ProfileText>
-                <ProfileText> {roomieData.lifestyle}</ProfileText>
-                <ProfileText> {roomieData.alarmSensitivity}</ProfileText>
-                <ProfileText> {roomieData.shareItems}</ProfileText>
-                <ProfileText> {roomieData.gaming}</ProfileText>
-                <ProfileText> {roomieData.studying}</ProfileText>
-                <ProfileText> {roomieData.eating}</ProfileText>
-                <ProfileText> {roomieData.cleaningFrequency}</ProfileText>
-                <ProfileText> {roomieData.mbti}</ProfileText>
-            </ProfileInfo>
-            
-        </Container>
-        </>
-    );
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>오류 발생: {error}</div>;
+
+  // // 임시 데이터 (프로필 정보)
+  // const roomieData = {
+  //   name: '김소정',
+  //   year: '21학번',
+  //   department: '인공지능융합대학',
+  //   dormPeriod: '6개월',
+  //   wakeUpTime: '09:00',
+  //   sleepTime: '23:00',
+  //   lightsOut: '22:00',
+  //   showerTime: '귀가 후',
+  //   smoking: '비흡연자',
+  //   sleepHabit: ['없음', '잠꼬대'],
+  //   lifestyle: '아침형',
+  //   alarmSensitivity: '둔감',
+  //   shareItems: '공유해요',
+  //   gaming: 'PC 게임',
+  //   studying: '불 켜고 해도 돼요',
+  //   eating: '간단한 간식',
+  //   cleaningFrequency: '일주일에 한 번',
+  //   mbti: 'INFP'
+  // };
+
+
+
+  return (
+    <>
+      <GlobalStyle />
+      <Container>
+        <ProfileImage
+          src={roomieData.imageData ? roomieData.imageData : tempImage}
+          alt="Roomie Profile"
+        />
+        <ProfileInfo>
+          <ProfileText>이름: {roomieData.name}</ProfileText>
+          {/* <ProfileText> {roomieData.year}</ProfileText> */}
+          <ProfileText>학과: {roomieData.department}</ProfileText>
+          <ProfileText>기숙사: {roomieData.dormitory}</ProfileText>
+          {/* <ProfileText> {roomieData.wakeUpTime}</ProfileText>
+          <ProfileText> {roomieData.sleepTime}</ProfileText>
+          <ProfileText> {roomieData.lightsOut}</ProfileText>
+          <ProfileText> {roomieData.showerTime}</ProfileText>
+          <ProfileText> {roomieData.smoking}</ProfileText>
+          <ProfileText> {roomieData.sleepHabit.join(', ')}</ProfileText>
+          <ProfileText> {roomieData.lifestyle}</ProfileText>
+          <ProfileText> {roomieData.alarmSensitivity}</ProfileText>
+          <ProfileText> {roomieData.shareItems}</ProfileText>
+          <ProfileText> {roomieData.gaming}</ProfileText>
+          <ProfileText> {roomieData.studying}</ProfileText>
+          <ProfileText> {roomieData.eating}</ProfileText>
+          <ProfileText> {roomieData.cleaningFrequency}</ProfileText>
+          <ProfileText> {roomieData.mbti}</ProfileText> */}
+        </ProfileInfo>
+
+      </Container>
+    </>
+  );
 }
 
 export default Roomie;

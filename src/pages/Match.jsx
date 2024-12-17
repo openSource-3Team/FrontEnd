@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from "axios"; // axios 추가
 import { useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import tempImage from '../images/ppotto.png';
@@ -62,6 +61,9 @@ function Match() {
         mbti: Click.filter((item) => ["ESTJ", "ESTP", "ESFJ", "ESFP", "ENTJ", "ENTP", "ENFJ", "ENFP", "ISTJ", "ISTP", "ISFJ", "ISFP", "INTJ", "INTP", "INFJ", "INFP"].includes(item)),
       };
 
+
+      console.log("요청 본문:", requestBody); // 필터 요청 데이터 확인
+      
       const response = await fetch("http://15.165.223.198:3000/users/filter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
