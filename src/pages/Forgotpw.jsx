@@ -21,8 +21,8 @@ function Forgotpw() {
       <Form onSubmit={handleSubmit}>
         <Title>비밀번호 찾기</Title>
         <Description>
-          걱정하지 마세요! 계정과 연결된 이메일을 입력하면 비밀번호 재설정을
-          위한 코드가 전송됩니다.
+          걱정하지 마세요! 계정과 연결된 이메일을 입력하면 M@tchRoomie가  비밀번호 재설정을
+          위한 코드를 보내줍니다.
         </Description>
         <InputGroup>
           <Input
@@ -59,7 +59,7 @@ const Container = styled.div`
   align-items: center;
   position: fixed;
   top: 30%;
-  left: 32%;
+  left: 30%;
 `;
 
 const Form = styled.form`
@@ -70,16 +70,16 @@ const Form = styled.form`
 `;
 
 const Title = styled.h1`
-  font-size: 33px;
+  font-size: 27px;
   font-weight: bold;
   color: #333;
   margin-bottom: 60px;
 `;
 
 const Description = styled.p`
-  font-size: 23px;
+  font-size: 20px;
   color: #777;
-  margin-bottom: 50px;
+  margin-bottom: 60px;
 `;
 
 const InputGroup = styled.div`
@@ -89,7 +89,7 @@ const InputGroup = styled.div`
 const Input = styled.input`
   width: 88%;
   padding: 20px 40px;
-  font-size: 17px;
+  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 15px;
 
@@ -117,7 +117,7 @@ const SendCodeButton = styled.button`
   padding: 15px;
   background-color: #a72b0c;
   color: white;
-  font-size: 18px;
+  font-size: 20px;
   border: none;
   border-radius: 15px;
   cursor: pointer;
@@ -132,13 +132,13 @@ const Footer = styled.div`
 `;
 
 const FooterText = styled.p`
-  font-size: 14px;
+  font-size: 15px;
   color: #333;
   margin-bottom: 0;
 `;
 
 const StyledLink = styled.a`
-  font-size: 14px;
+  font-size: 15px;
   color: #a72b0c;
   cursor: pointer;
   margin-left: 10px; /* "Remember"와 "Log in" 간격 증가 */

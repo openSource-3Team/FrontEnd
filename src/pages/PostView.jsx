@@ -1,31 +1,68 @@
 // PostView.jsx
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 function PostView() {
   const navigate = useNavigate();
+  const { id } = useParams(); // URL 파라미터에서 id 추출
+  const [post, setPost] = useState(null);
 
-  // 더미 데이터 (실제로는 서버에서 받아온 데이터를 사용)
-  const post = {
-    title: '게시글 제목 1',
-    author: '작성자 A',
-    date: '2024-11-29',
-    content:
-      '여기에 게시글 내용이 들어갑니다. 이곳에 작성자가 남긴 내용들이 펼쳐집니다. 다양한 내용들이 들어갈 수 있습니다.',
-  };
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await fetch(`http://15.165.223.198:3000/posts/${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('게시물 조회 성공:', data);
+          setPost(data.result);
+        } else if (response.status === 404) {
+          console.error('게시물을 찾을 수 없음');
+          setPost(null);
+        } else {
+          console.error('게시물 조회 실패');
+          setPost(null);
+        }
+      } catch (error) {
+        console.error('게시물 조회 중 오류:', error);
+        setPost(null);
+      }
+    };
+
+    fetchPost();
+  }, [id]);
 
   // 뒤로 가기 버튼 클릭 시 /community로 이동
   const goBack = () => {
-    navigate('/community'); // /community 페이지로 이동
+    navigate('/community');
   };
+
+  // post가 로딩 중이거나 없는 경우 처리
+  if (post === null) {
+    return (
+      <Container>
+        <PostCard>
+          <PostTitle>게시물을 불러오는 중...</PostTitle>
+          <ButtonGroup>
+            <Button onClick={goBack}>돌아가기</Button>
+          </ButtonGroup>
+        </PostCard>
+      </Container>
+    );
+  }
 
   return (
     <Container>
       <PostCard>
         <PostHeader>
-          <div>작성자: {post.author}</div>
-          <div>작성일: {post.date}</div>
+          <div>작성자: {post.authorId}</div>
+          <div>작성일: {new Date(post.createdAt).toLocaleString()}</div>
         </PostHeader>
 
         <PostTitle>{post.title}</PostTitle>
@@ -44,15 +81,20 @@ export default PostView;
 // 스타일링
 
 const Container = styled.div`
-  width: 220vh;
+  width: 210vh;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-
   position: fixed;
   top: 10%;
   font-family: 'Arial', sans-serif;
+
+  /* 반응형 고려 */
+  @media (max-width: 768px) {
+    width: 100vw;
+    top: 5%;
+  }
 `;
 
 const PostCard = styled.div`
@@ -70,23 +112,23 @@ const PostHeader = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   color: #666;
   margin-bottom: 20px;
 `;
 
 const PostTitle = styled.h1`
-  font-size: 36px;
+  font-size: 27px;
   font-weight: 700;
   color: #333;
   margin-bottom: 20px;
-  padding: 0 0 10px 0;
+  padding: 0 0 30px 0;
   border-bottom: 2px solid #a72b0c;
 `;
 
 const PostContent = styled.p`
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.8;
   color: #555;
   background-color: #f9f9f9;
@@ -107,7 +149,7 @@ const Button = styled.button`
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 17px;
+  font-size: 15px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
