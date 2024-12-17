@@ -7,16 +7,15 @@ const GlobalStyle = createGlobalStyle`
   html, body, #root {
     width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
   }
 `;
 
 function Match() {
   const [Click, setClick] = useState([]);
   const [roomies, setRoomies] = useState([]); // Roomie 상태
+  const [username, setUsername] = useState("사용자"); // 사용자 이름 상태
+  const [userGender, setUserGender] = useState(null); // 사용자 성별 상태 추가
   const navigate = useNavigate();
 
   // 필터 선택 함수
@@ -59,6 +58,7 @@ function Match() {
         sleepingHabits: Click.filter((item) => ["코골이", "이갈이", "몽유병", "잠꼬대"].includes(item)),
         acLevel: Click.filter((item) => ["민감", "둔감"].includes(item)),
         mbti: Click.filter((item) => ["ESTJ", "ESTP", "ESFJ", "ESFP", "ENTJ", "ENTP", "ENFJ", "ENFP", "ISTJ", "ISTP", "ISFJ", "ISFP", "INTJ", "INTP", "INFJ", "INFP"].includes(item)),
+        gender: userGender, // 사용자 성별 조건 추가
       };
 
 
@@ -81,9 +81,29 @@ function Match() {
     }
   };
 
+
   useEffect(() => {
-    fetchRoomies();
-  }, [Click]); // Click 상태가 바뀔 때마다 호출
+    // 로그인된 사용자 정보 가져오는 함수 (임시 예시)
+    const fetchUserInfo = async () => {
+      try {
+        const response = await fetch("http://15.165.223.198:3000/user-info");
+        if (!response.ok) throw new Error("사용자 정보 불러오기 실패");
+
+        const data = await response.json();
+        setUsername(data.name); // 사용자 이름 저장
+        setUserGender(data.gender); // 성별 상태 설정
+      } catch (error) {
+        console.error("사용자 정보 오류:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
+   // 필터링 조건 변경될 때마다 호출
+   useEffect(() => {
+    if (userGender) fetchRoomies(); // 성별 정보가 존재할 때만 호출
+  }, [Click, userGender]);
 
   return (
     <>
@@ -336,11 +356,12 @@ function Match() {
             </FilterValues>
           </FilterGroup>
         </Filter>
-        <Explain> 아래는 ㅇㅇ님과 딱 맞는 루미들이에요. <br></br>
+        
+        <HorizonLine text="Roomie" />
+
+        <Explain> 아래는 {username}님과 딱 맞는 루미들이에요. <br></br>
           프로필을 눌러 세부사항도 확인해보세요.
         </Explain>
-
-        <HorizonLine text="Roomie" />
 
         <ProfileContainer>
           {roomies.length > 0 ? (
@@ -377,10 +398,9 @@ const Container = styled.div`
 
 const Explain = styled.div`
 text-align: center;
-padding : 30px;
+padding : 10px;
 width: 60%; /* 부모 컨테이너의 전체 너비를 차지 */
 font-size:20px;
-
 `;
 
 const Filter = styled.div`
@@ -431,7 +451,8 @@ const HorizonLineContainer = styled.div`
   text-align: center;
   border-bottom: 1px solid #aaa;
   line-height: 0.1em;
-  margin-bottom : 20px;
+  margin-top : 40px;
+  margin-bottom : 10px;
 `;
 
 const HorizonLineText = styled.span`
