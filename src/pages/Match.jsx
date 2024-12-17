@@ -62,14 +62,18 @@ function Match() {
         mbti: Click.filter((item) => ["ESTJ", "ESTP", "ESFJ", "ESFP", "ENTJ", "ENTP", "ENFJ", "ENFP", "ISTJ", "ISTP", "ISFJ", "ISFP", "INTJ", "INTP", "INFJ", "INFP"].includes(item)),
       };
 
-      // 서버 API 호출
-      const response = await axios.post(
-        "http://15.165.223.198:3000/users/filter",
-        requestBody
-      );
-
-      // 서버로부터 반환된 데이터 상태에 저장
-      setRoomies(response.data);
+      const response = await fetch("http://15.165.223.198:3000/users/filter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`서버 오류: ${response.status}`);
+      }
+  
+      const data = await response.json(); // JSON 응답을 파싱
+      setRoomies(data); // 상태에 저장
     } catch (error) {
       console.error("사용자 데이터 불러오기 실패:", error);
     }
