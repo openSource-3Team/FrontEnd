@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Select from 'react-select';
 import styled, { createGlobalStyle } from 'styled-components';
+import axios from 'axios';
 
 const options = {
     gender: [
@@ -32,7 +33,7 @@ const options = {
         { value: '21', label: '21' },
         { value: '22', label: '22' },
         { value: '23', label: '23' },
-        { value: '24', label: '24' }, 
+        { value: '24', label: '24' },
         { value: '25', label: '25' },
     ],
     birthYear: [
@@ -58,11 +59,11 @@ const options = {
         { value: '비흡연자', label: '비흡연자' },
     ],
     sleephabits: [
-        {value: '코골이', label: '코골이'},
-        {value: '이갈이', label: '이갈이'},
-        {value: '잠꼬대', label: '잠꼬대'},
-        {value: '불면증', label: '불면증'},
-        {value: '몽유병', label: '몽유병'},
+        { value: '코골이', label: '코골이' },
+        { value: '이갈이', label: '이갈이' },
+        { value: '잠꼬대', label: '잠꼬대' },
+        { value: '불면증', label: '불면증' },
+        { value: '몽유병', label: '몽유병' },
     ],
     wakeup: [
         { value: '07:00', label: '07:00' },
@@ -131,7 +132,7 @@ const options = {
         { value: 'INFP', label: 'INFP' },
         { value: 'INTJ', label: 'INTJ' },
     ],
-    
+
 };
 
 function Profile() {
@@ -158,8 +159,9 @@ function Profile() {
     const [userName, setUserName] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
+    const [phoneNumber, setPhoneNumber] = useState('');
 
-    
+
     const handleProfilePictureChange = (event) => {
         const file = event.target.files[0];
         if (!file) return; // If no file is selected, exit
@@ -256,10 +258,14 @@ function Profile() {
         });
     };
 
-    const handleSaveProfile = () => {
+    const handleSaveProfile = async () => {
+
+        const userId = 1;
+        const url = 'http://15.165.223.198:3000/users/1/profile';
         const profileData = {
             userName,
             profilePicture,
+            phoneNumber,
             selectedGender,
             selectedDorm,
             selectedMajor,
@@ -280,285 +286,319 @@ function Profile() {
             selectedMbti,
         };
 
-        console.log('저장된 프로필 데이터:', profileData);
-        alert('프로필이 저장되었습니다!');
+        console.log('보낼 데이터:', profileData); // 요청 데이터 확인
+
+        try {
+            const response = await axios.post(url, profileData, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            console.log('프로필 저장 성공:', response.data);
+            alert('프로필이 성공적으로 저장되었습니다!');
+        } catch (error) {
+            console.error('프로필 저장 실패:', error);
+            alert(`저장 실패: ${error.response?.data?.message || error.message}`);
+            if (error.response) {
+                // 서버에서 반환된 오류 메시지를 출력
+                console.error('서버 응답 오류:', error.response.data);
+                alert(`서버 오류: ${JSON.stringify(error.response.data)}`);
+            } else if (error.request) {
+                // 요청이 보내졌지만 응답을 받지 못한 경우
+                console.error('요청 실패:', error.request);
+                alert('서버에 요청을 보냈으나 응답이 없습니다.');
+            } else {
+                // 요청을 만들기 전에 발생한 오류
+                console.error('오류 발생:', error.message);
+                alert(`오류 발생: ${error.message}`);
+            }
+        }
     };
 
     return (
         <>
-        <GlobalStyle /> 
-        <div>
-            <Container>
-            <Content>
-            <h1>프로필 세팅</h1>
-            <p>여기에 사용자 프로필 설정 양식을 작성하세요.</p>
+            <GlobalStyle />
+            <div>
+                <Container>
+                    <Content>
+                        <h1>프로필 세팅</h1>
+                        <p>여기에 사용자 프로필 설정 양식을 작성하세요.</p>
 
-            {/* New fields for name and profile picture */}
-            {/* User name input */}
-            <InputGroup>
-                <label htmlFor="userName">이름:</label>
-                <TextInput
-                    type="text"
-                    id="userName"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
-                    placeholder="이름을 입력하세요"
-                />
-            </InputGroup>
-
-            {/* Profile picture upload */}
-            <InputGroup>
-                <label htmlFor="profilePicture">프로필 사진:</label>
-                <FileInput
-                    type="file"
-                    id="profilePicture"
-                    onChange={handleProfilePictureChange}
-                    accept="image/*"
-                />
-                {previewUrl && (
-                    <PreviewImage src={previewUrl} alt="Profile Preview" />
-                )}
-            </InputGroup>
-
-            <h3>매칭 프로필 옵션 세팅</h3>
-
-            {/* Options for gender, dorm, etc. */}
-            <OptionGroup>
-                <h4>성별 선택</h4>
-                <CheckBoxContainer>
-                    {options.gender.map((option) => (
-                        <CheckBoxContainer key={option.value}>
-                            <CheckBox
-                                type="radio"
-                                name="gender"
-                                value={option.value}
-                                checked={selectedGender === option.value}
-                                onChange={handleGenderChange}
+                        {/* New fields for name and profile picture */}
+                        {/* User name input */}
+                        <InputGroup>
+                            <label htmlFor="userName">이름:</label>
+                            <TextInput
+                                type="text"
+                                id="userName"
+                                value={userName}
+                                onChange={(e) => setUserName(e.target.value)}
+                                placeholder="이름을 입력하세요"
                             />
-                            <CheckBoxLabel>{option.label}</CheckBoxLabel>
-                        </CheckBoxContainer>
-                    ))}
-                </CheckBoxContainer>
+                        </InputGroup>
 
-                <h4>기숙사 선택</h4>
-                <Select
-                    value={selectedDorm}
-                    onChange={setSelectedDorm}
-                    options={options.dorm}
-                    placeholder="기숙사를 선택하세요"
-                />
-
-                <h4>단과대 선택</h4>
-                <Select
-                    value={selectedMajor}
-                    onChange={setSelectedMajor}
-                    options={options.major}
-                    placeholder="단과대를 선택하세요"
-                />
-
-                <h4>학번 선택</h4>
-                <Select
-                    value={selectedStudentNumber}
-                    onChange={setSelectedStudentNumber}
-                    options={options.studentNumber}
-                    placeholder="학번을 선택하세요"
-                />
-
-                <h4>출생연도 선택</h4>
-                <Select
-                    value={selectedBirthYear}
-                    onChange={setSelectedBirthYear}
-                    options={options.birthYear}
-                    placeholder="출생연도를 선택하세요"
-                />
-
-                <h4>생활패턴 선택</h4>
-                <CheckBoxContainer>
-                    {options.lifestyle.map((option) => (
-                        <CheckBoxContainer key={option.value}>
-                            <CheckBox
-                                type="checkbox"
-                                value={option.value}
-                                checked={selectedLifestyle === option.value}
-                                onChange={handleLifestyleChange}
+                        {/* Profile picture upload */}
+                        <InputGroup>
+                            <label htmlFor="profilePicture">프로필 사진:</label>
+                            <FileInput
+                                type="file"
+                                id="profilePicture"
+                                onChange={handleProfilePictureChange}
+                                accept="image/*"
                             />
-                            <CheckBoxLabel>{option.label}</CheckBoxLabel>
-                        </CheckBoxContainer>
-                    ))}
-                </CheckBoxContainer>
+                            {previewUrl && (
+                                <PreviewImage src={previewUrl} alt="Profile Preview" />
+                            )}
+                        </InputGroup>
 
-                <h4>흡연여부 선택</h4>
-                <CheckBoxContainer>
-                    {options.isSmoker.map((option) => (
-                        <CheckBoxContainer key={option.value}>
-                            <CheckBox
-                                type="checkbox"
-                                value={option.value}
-                                checked={selectedIsSmoker === option.value}
-                                onChange={handleIsSmokerChange}
+                        <InputGroup>
+                            <label htmlFor="phoneNumber">전화번호:</label>
+                            <TextInput
+                                type="text"
+                                id="phoneNumber"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                placeholder="전화번호를 입력하세요"
                             />
-                            <CheckBoxLabel>{option.label}</CheckBoxLabel>
-                        </CheckBoxContainer>
-                    ))}
-                </CheckBoxContainer>
+                        </InputGroup>
 
-                <h4>수면습관 선택</h4>
-                <CheckBoxContainer>
-                    {options.sleephabits.map((option) => (
-                        <CheckBoxContainer key={option.value}>
-                            <CheckBox
-                                type="checkbox"
-                                value={option.value}
-                                checked={selectedSleephabits.includes(option.value)}
-                                onChange={handleSleephabitsChange}
+                        <h3>매칭 프로필 옵션 세팅</h3>
+
+                        {/* Options for gender, dorm, etc. */}
+                        <OptionGroup>
+                            <h4>성별 선택</h4>
+                            <CheckBoxContainer>
+                                {options.gender.map((option) => (
+                                    <CheckBoxContainer key={option.value}>
+                                        <CheckBox
+                                            type="radio"
+                                            name="gender"
+                                            value={option.value}
+                                            checked={selectedGender === option.value}
+                                            onChange={handleGenderChange}
+                                        />
+                                        <CheckBoxLabel>{option.label}</CheckBoxLabel>
+                                    </CheckBoxContainer>
+                                ))}
+                            </CheckBoxContainer>
+
+                            <h4>기숙사 선택</h4>
+                            <Select
+                                value={selectedDorm}
+                                onChange={setSelectedDorm}
+                                options={options.dorm}
+                                placeholder="기숙사를 선택하세요"
                             />
-                            <CheckBoxLabel>{option.label}</CheckBoxLabel>
-                        </CheckBoxContainer>
-                    ))}
-                </CheckBoxContainer>
 
-                <h4>기상시간 선택</h4>
-                <CheckBoxContainer>
-                    {options.wakeup.map((option) => (
-                        <CheckBoxContainer key={option.value}>
-                            <CheckBox
-                                type="checkbox"
-                                value={option.value}
-                                checked={selectedWakeup === option.value}
-                                onChange={handleWakeupChange}
+                            <h4>단과대 선택</h4>
+                            <Select
+                                value={selectedMajor}
+                                onChange={setSelectedMajor}
+                                options={options.major}
+                                placeholder="단과대를 선택하세요"
                             />
-                            <CheckBoxLabel>{option.label}</CheckBoxLabel>
-                        </CheckBoxContainer>
-                    ))}
-                </CheckBoxContainer>
 
-                <h4>취침시간 선택</h4>
-                <CheckBoxContainer>
-                    {options.gotobed.map((option) => (
-                        <CheckBoxContainer key={option.value}>
-                            <CheckBox
-                                type="checkbox"
-                                value={option.value}
-                                checked={selectedGotobed === option.value}
-                                onChange={handleGotobedChange}
+                            <h4>학번 선택</h4>
+                            <Select
+                                value={selectedStudentNumber}
+                                onChange={setSelectedStudentNumber}
+                                options={options.studentNumber}
+                                placeholder="학번을 선택하세요"
                             />
-                            <CheckBoxLabel>{option.label}</CheckBoxLabel>
-                        </CheckBoxContainer>
-                    ))}
-                </CheckBoxContainer>
 
-                <h4>소등시간 선택</h4>
-                <CheckBoxContainer>
-                    {options.offlight.map((option) => (
-                        <CheckBoxContainer key={option.value}>
-                            <CheckBox
-                                type="checkbox"
-                                value={option.value}
-                                checked={selectedOfflight === option.value}
-                                onChange={handleOfflightChange}
+                            <h4>출생연도 선택</h4>
+                            <Select
+                                value={selectedBirthYear}
+                                onChange={setSelectedBirthYear}
+                                options={options.birthYear}
+                                placeholder="출생연도를 선택하세요"
                             />
-                            <CheckBoxLabel>{option.label}</CheckBoxLabel>
-                        </CheckBoxContainer>
-                    ))}
-                </CheckBoxContainer>
 
-                <h4>알람소리 선택</h4>
-                <CheckBoxContainer>
-                    {options.alarm.map((option) => (
-                        <CheckBoxContainer key={option.value}>
-                            <CheckBox
-                                type="checkbox"
-                                value={option.value}
-                                checked={selectedAlarm === option.value}
-                                onChange={handleAlarmChange}
+                            <h4>생활패턴 선택</h4>
+                            <CheckBoxContainer>
+                                {options.lifestyle.map((option) => (
+                                    <CheckBoxContainer key={option.value}>
+                                        <CheckBox
+                                            type="checkbox"
+                                            value={option.value}
+                                            checked={selectedLifestyle === option.value}
+                                            onChange={handleLifestyleChange}
+                                        />
+                                        <CheckBoxLabel>{option.label}</CheckBoxLabel>
+                                    </CheckBoxContainer>
+                                ))}
+                            </CheckBoxContainer>
+
+                            <h4>흡연여부 선택</h4>
+                            <CheckBoxContainer>
+                                {options.isSmoker.map((option) => (
+                                    <CheckBoxContainer key={option.value}>
+                                        <CheckBox
+                                            type="checkbox"
+                                            value={option.value}
+                                            checked={selectedIsSmoker === option.value}
+                                            onChange={handleIsSmokerChange}
+                                        />
+                                        <CheckBoxLabel>{option.label}</CheckBoxLabel>
+                                    </CheckBoxContainer>
+                                ))}
+                            </CheckBoxContainer>
+
+                            <h4>수면습관 선택</h4>
+                            <CheckBoxContainer>
+                                {options.sleephabits.map((option) => (
+                                    <CheckBoxContainer key={option.value}>
+                                        <CheckBox
+                                            type="checkbox"
+                                            value={option.value}
+                                            checked={selectedSleephabits.includes(option.value)}
+                                            onChange={handleSleephabitsChange}
+                                        />
+                                        <CheckBoxLabel>{option.label}</CheckBoxLabel>
+                                    </CheckBoxContainer>
+                                ))}
+                            </CheckBoxContainer>
+
+                            <h4>기상시간 선택</h4>
+                            <CheckBoxContainer>
+                                {options.wakeup.map((option) => (
+                                    <CheckBoxContainer key={option.value}>
+                                        <CheckBox
+                                            type="checkbox"
+                                            value={option.value}
+                                            checked={selectedWakeup === option.value}
+                                            onChange={handleWakeupChange}
+                                        />
+                                        <CheckBoxLabel>{option.label}</CheckBoxLabel>
+                                    </CheckBoxContainer>
+                                ))}
+                            </CheckBoxContainer>
+
+                            <h4>취침시간 선택</h4>
+                            <CheckBoxContainer>
+                                {options.gotobed.map((option) => (
+                                    <CheckBoxContainer key={option.value}>
+                                        <CheckBox
+                                            type="checkbox"
+                                            value={option.value}
+                                            checked={selectedGotobed === option.value}
+                                            onChange={handleGotobedChange}
+                                        />
+                                        <CheckBoxLabel>{option.label}</CheckBoxLabel>
+                                    </CheckBoxContainer>
+                                ))}
+                            </CheckBoxContainer>
+
+                            <h4>소등시간 선택</h4>
+                            <CheckBoxContainer>
+                                {options.offlight.map((option) => (
+                                    <CheckBoxContainer key={option.value}>
+                                        <CheckBox
+                                            type="checkbox"
+                                            value={option.value}
+                                            checked={selectedOfflight === option.value}
+                                            onChange={handleOfflightChange}
+                                        />
+                                        <CheckBoxLabel>{option.label}</CheckBoxLabel>
+                                    </CheckBoxContainer>
+                                ))}
+                            </CheckBoxContainer>
+
+                            <h4>알람소리 선택</h4>
+                            <CheckBoxContainer>
+                                {options.alarm.map((option) => (
+                                    <CheckBoxContainer key={option.value}>
+                                        <CheckBox
+                                            type="checkbox"
+                                            value={option.value}
+                                            checked={selectedAlarm === option.value}
+                                            onChange={handleAlarmChange}
+                                        />
+                                        <CheckBoxLabel>{option.label}</CheckBoxLabel>
+                                    </CheckBoxContainer>
+                                ))}
+                            </CheckBoxContainer>
+
+                            <h4>물건 공유 여뷰 선택</h4>
+                            <CheckBoxContainer>
+                                {options.share.map((option) => (
+                                    <CheckBoxContainer key={option.value}>
+                                        <CheckBox
+                                            type="checkbox"
+                                            value={option.value}
+                                            checked={selectedShare === option.value}
+                                            onChange={handleShareChange}
+                                        />
+                                        <CheckBoxLabel>{option.label}</CheckBoxLabel>
+                                    </CheckBoxContainer>
+                                ))}
+                            </CheckBoxContainer>
+
+                            <h4>방에서 게임 여부 선택</h4>
+                            <CheckBoxContainer>
+                                {options.game.map((option) => (
+                                    <CheckBoxContainer key={option.value}>
+                                        <CheckBox
+                                            type="checkbox"
+                                            value={option.value}
+                                            checked={selectedGame.includes(option.value)}
+                                            onChange={handleGameChange}
+                                        />
+                                        <CheckBoxLabel>{option.label}</CheckBoxLabel>
+                                    </CheckBoxContainer>
+                                ))}
+                            </CheckBoxContainer>
+
+                            <h4>방에서 공부 여부 선택</h4>
+                            <CheckBoxContainer>
+                                {options.study.map((option) => (
+                                    <CheckBoxContainer key={option.value}>
+                                        <CheckBox
+                                            type="checkbox"
+                                            value={option.value}
+                                            checked={selectedStudy.includes(option.value)}
+                                            onChange={handleStudyChange}
+                                        />
+                                        <CheckBoxLabel>{option.label}</CheckBoxLabel>
+                                    </CheckBoxContainer>
+                                ))}
+                            </CheckBoxContainer>
+
+                            <h4>방에서 음식물 섭취 여부 선택</h4>
+                            <CheckBoxContainer>
+                                {options.food.map((option) => (
+                                    <CheckBoxContainer key={option.value}>
+                                        <CheckBox
+                                            type="checkbox"
+                                            value={option.value}
+                                            checked={selectedFood.includes(option.value)}
+                                            onChange={handleFoodChange}
+                                        />
+                                        <CheckBoxLabel>{option.label}</CheckBoxLabel>
+                                    </CheckBoxContainer>
+                                ))}
+                            </CheckBoxContainer>
+
+                            <h4>청소 주기 선택</h4>
+                            <Select
+                                value={selectedCleaning}
+                                onChange={setSelectedCleaning}
+                                options={options.cleaning}
+                                placeholder="청소 주기를 선택하세요"
                             />
-                            <CheckBoxLabel>{option.label}</CheckBoxLabel>
-                        </CheckBoxContainer>
-                    ))}
-                </CheckBoxContainer>
 
-                <h4>물건 공유 여뷰 선택</h4>
-                <CheckBoxContainer>
-                    {options.share.map((option) => (
-                        <CheckBoxContainer key={option.value}>
-                            <CheckBox
-                                type="checkbox"
-                                value={option.value}
-                                checked={selectedShare === option.value}
-                                onChange={handleShareChange}
+                            <h4>MBTI 선택</h4>
+                            <Select
+                                value={selectedMbti}
+                                onChange={setSelectedMbti}
+                                options={options.mbti}
+                                placeholder="MBTI를 선택하세요"
                             />
-                            <CheckBoxLabel>{option.label}</CheckBoxLabel>
-                        </CheckBoxContainer>
-                    ))}
-                </CheckBoxContainer>
+                            {/*저장 버튼*/}
+                            <SaveButton onClick={handleSaveProfile}>프로필 저장</SaveButton>
 
-                <h4>방에서 게임 여부 선택</h4>
-                <CheckBoxContainer>
-                    {options.game.map((option) => (
-                        <CheckBoxContainer key={option.value}>
-                            <CheckBox
-                                type="checkbox"
-                                value={option.value}
-                                checked={selectedGame.includes(option.value)}
-                                onChange={handleGameChange}
-                            />
-                            <CheckBoxLabel>{option.label}</CheckBoxLabel>
-                        </CheckBoxContainer>
-                    ))}
-                </CheckBoxContainer>
-
-                <h4>방에서 공부 여부 선택</h4>
-                <CheckBoxContainer>
-                    {options.study.map((option) => (
-                        <CheckBoxContainer key={option.value}>
-                            <CheckBox
-                                type="checkbox"
-                                value={option.value}
-                                checked={selectedStudy.includes(option.value)}
-                                onChange={handleStudyChange}
-                            />
-                            <CheckBoxLabel>{option.label}</CheckBoxLabel>
-                        </CheckBoxContainer>
-                    ))}
-                </CheckBoxContainer>
-
-                <h4>방에서 음식물 섭취 여부 선택</h4>
-                <CheckBoxContainer>
-                    {options.food.map((option) => (
-                        <CheckBoxContainer key={option.value}>
-                            <CheckBox
-                                type="checkbox"
-                                value={option.value}
-                                checked={selectedFood.includes(option.value)}
-                                onChange={handleFoodChange}
-                            />
-                            <CheckBoxLabel>{option.label}</CheckBoxLabel>
-                        </CheckBoxContainer>
-                    ))}
-                </CheckBoxContainer>
-
-                <h4>청소 주기 선택</h4>
-                <Select
-                    value={selectedCleaning}
-                    onChange={setSelectedCleaning}
-                    options={options.cleaning}
-                    placeholder="청소 주기를 선택하세요"
-                />
-
-                <h4>MBTI 선택</h4>
-                <Select
-                    value={selectedMbti}
-                    onChange={setSelectedMbti}
-                    options={options.mbti}
-                    placeholder="MBTI를 선택하세요"
-                />
-                {/*저장 버튼*/}
-                <SaveButton onClick={handleSaveProfile}>프로필 저장</SaveButton>
-
-            </OptionGroup>
-            </Content>
-        </Container>
-        </div>
+                        </OptionGroup>
+                    </Content>
+                </Container>
+            </div>
         </>
     );
 }
@@ -569,7 +609,7 @@ export default Profile;
 
 //global style setting
 const GlobalStyle = createGlobalStyle`
-  html, body, #root {
+    html, body, #root {
     width: 100%;
     height: 100%;
     margin: 0;
@@ -585,7 +625,7 @@ const Container = styled.div`
     align-items: center; /* 세로 중앙 정렬 */
     height: 100vh; /* 화면 전체 높이 */
     box-sizing: border-box; /* 패딩 포함 크기 계산 */
-    padding-top: 1650px; /* 네비게이션 바 높이만큼 여백 추가 */
+    padding-top: 1700px; /* 네비게이션 바 높이만큼 여백 추가 */
 `;
 
 const Content = styled.div`
@@ -656,4 +696,4 @@ const SaveButton = styled.button`
     &:hover {
         background-color: #a72b0c;
     }
-`;
+`; 
