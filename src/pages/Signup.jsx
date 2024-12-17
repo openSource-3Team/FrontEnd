@@ -1,40 +1,68 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
   const [email, setEmail] = useState('');
-  const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [accepted, setAccepted] = useState(false); // 약관 동의 여부
-
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState('');
 
+  const navigate = useNavigate();
+
+  // Validate form fields
   const validate = () => {
     const newErrors = {};
 
     if (!email) newErrors.email = '이메일을 입력해주세요.';
-    if (!id) newErrors.id = '아이디를 입력해주세요.';
     if (!password) newErrors.password = '비밀번호를 입력해주세요.';
     if (!confirmPassword) {
       newErrors.confirmPassword = '비밀번호 확인을 입력해주세요.';
     } else if (password !== confirmPassword) {
       newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
     }
-    if (!accepted) newErrors.accepted = '약관에 동의해주세요.'; // 약관 동의 체크
+    if (!accepted) newErrors.accepted = '약관에 동의해주세요.';
 
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setApiError('');
     const validationErrors = validate();
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-    } else {
-      setErrors({});
-      alert('회원가입 성공!');
-      // navigate('/login'); // 회원가입 성공 후 /login으로 이동
+      return;
+    }
+
+    setErrors({});
+
+      console.log('Sending payload:', { email, password });
+    try {
+      // Send POST request to /users/register
+      const response = await fetch('http://15.165.223.198:3000/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('사용자 등록 성공:', data);
+        alert('회원가입 성공!');
+        navigate('/login'); // 성공 후 로그인 페이지로 이동
+      } else {
+        // Handle registration failure
+        alert('회원가입 실패: 이미 존재하는 이메일이거나 잘못된 요청입니다.');
+      }
+    } catch (error) {
+      console.error('회원가입 요청 중 에러:', error);
+      setApiError('서버 에러: 잠시 후 다시 시도해주세요.');
     }
   };
 
@@ -42,6 +70,9 @@ function Signup() {
     <Container>
       <Form onSubmit={handleSubmit}>
         <Title>회원가입</Title>
+        <Description>
+          M@tchRoomie와 함께 룸메이트를 찾고 커뮤니티를 즐길 수 있어요!
+        </Description>
         <InputGroup>
           <Input
             type="email"
@@ -50,15 +81,6 @@ function Signup() {
             placeholder="Email"
           />
           {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
-        </InputGroup>
-        <InputGroup>
-          <Input
-            type="text"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-            placeholder="ID"
-          />
-          {errors.id && <ErrorMessage>{errors.id}</ErrorMessage>}
         </InputGroup>
         <InputGroup>
           <Input
@@ -81,7 +103,6 @@ function Signup() {
           )}
         </InputGroup>
 
-        {/* 약관 동의 체크박스 */}
         <CheckboxContainer>
           <Checkbox
             type="checkbox"
@@ -91,6 +112,8 @@ function Signup() {
           <Label>I accept the terms and privacy policy</Label>
         </CheckboxContainer>
         {errors.accepted && <ErrorMessage>{errors.accepted}</ErrorMessage>}
+
+        {apiError && <ErrorMessage>{apiError}</ErrorMessage>}
 
         <ButtonGroup>
           <SignUpButton type="submit">Sign Up</SignUpButton>
@@ -110,16 +133,22 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   position: fixed;
-  top: 30%;
-  left: 32%;
+  top: 27%;
+  left: 30%;
 `;
 
 const Title = styled.div`
-  font-size: 34px;
+  font-size: 27px;
   color: #333;
-  margin-bottom: 60px;
   font-weight: 600;
   text-align: center;
+`;
+
+const Description = styled.p`
+  font-size: 20px;
+  text-align: center;
+  color: #777;
+  margin-bottom: 60px;
 `;
 
 const Form = styled.form`
@@ -135,7 +164,7 @@ const InputGroup = styled.div`
 const Input = styled.input`
   width: 90%;
   padding: 20px 40px;
-  font-size: 17px;
+  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 20px;
 
@@ -163,7 +192,7 @@ const ButtonGroup = styled.div`
 const SignUpButton = styled.button`
   flex: 1;
   padding: 10px 20px;
-  font-size: 23px;
+  font-size: 20px;
   color: white;
   background-color: #a72b0c;
   border: none;
