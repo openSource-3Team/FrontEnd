@@ -124,8 +124,11 @@ function Roomie() {
           <ProfileText> 소등시간 : {roomieData.lightOutTime}</ProfileText>
           <ProfileText> 샤워시간 : {roomieData.showerTime}</ProfileText>
           <ProfileText> 흡연 여부 : {roomieData.isSmoking ? '흡연' : '비흡연'} </ProfileText>
-          <ProfileText> 잠버릇 : {roomieData.sleepingHabits.join(', ')}</ProfileText>
-          <ProfileText> 생활 패턴 : {roomieData.lifestyle}</ProfileText>
+          <ProfileText>
+            잠버릇 : {roomieData.sleepingHabits && roomieData.sleepingHabits.length > 0
+              ? roomieData.sleepingHabits.join(', ')
+              : '없음'}
+          </ProfileText>          <ProfileText> 생활 패턴 : {roomieData.lifestyle}</ProfileText>
           <ProfileText> 알람소리 : {roomieData.alarm}</ProfileText>
           <ProfileText> 물건 공유 : {roomieData.itemSharingPreference}</ProfileText>
           <ProfileText> 방 안에서 게임 : {roomieData.gamePreference.join(', ')}</ProfileText>
@@ -162,7 +165,7 @@ const Container = styled.div`
 `;
 
 const ProfileInfo = styled.div`
-  width: 25%;
+  width: 540px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -171,8 +174,7 @@ const ProfileInfo = styled.div`
   border: 2px solid #a72b0c;
   border-radius: 10px;
   background-color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const ProfileText = styled.div`
@@ -185,7 +187,7 @@ const MessageSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 540px;
+  width: 600px;
 `;
 
 const MessageInput = styled.textarea`
