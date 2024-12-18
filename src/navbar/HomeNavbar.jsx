@@ -15,6 +15,7 @@ function Navbar() {
         </LeftSection>
         <MidSection>
           <Highlight>광운대학교 기숙사</Highlight> 룸메 매칭 서비스
+          <SmallText>화면 비율 80% 권장</SmallText>
         </MidSection>
         <RightSection>
           <NavButton as={Link} to="/login">
@@ -138,4 +139,8 @@ const ProfileIcon = styled(FaUserCircle)`
   color: #a72b0c;
   font-size: 17px;
   margin-right: 5px;
+`;
+const SmallText = styled.div`
+  font-size: 12px;
+  color: #999;
 `;

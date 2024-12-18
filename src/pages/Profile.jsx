@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import styled, { createGlobalStyle } from 'styled-components';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const options = {
@@ -253,8 +252,9 @@ function Profile() {
       alert('모든 필수 필드를 입력해주세요.');
       return;
     }
+
     const userid = localStorage.getItem('userid');
-    const url = `http://15.165.223.198:3000/users/${userid}/profile`;
+    const url = `/api/users/${userid}/profile`;
 
     const formData = new FormData();
 
@@ -292,20 +292,23 @@ function Profile() {
     }
 
     try {
-      const response = await axios.put(url, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await fetch(url, {
+        method: 'PUT',
+        body: formData,
       });
-      console.log('프로필 저장 성공:', response.data);
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage || '알 수 없는 오류 발생');
+      }
+
+      const responseData = await response.json();
+      console.log('프로필 저장 성공:', responseData);
       alert('프로필이 성공적으로 저장되었습니다!');
       navigate('/match'); // 로그인 페이지로 이동
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.response?.data ||
-        error.message ||
-        '알 수 없는 오류 발생';
-      console.error('프로필 저장 실패:', errorMessage);
-      alert(`저장 실패: ${errorMessage}`);
+      console.error('프로필 저장 실패:', error.message);
+      alert(`저장 실패: ${error.message}`);
     }
   };
 

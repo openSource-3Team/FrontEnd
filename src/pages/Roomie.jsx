@@ -17,7 +17,6 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-
 function Roomie() {
   const { id } = useParams(); // URL 파라미터에서 ID 가져오기
   const navigate = useNavigate();
@@ -33,8 +32,8 @@ function Roomie() {
       try {
         console.log('보고있는 유저의 id:', id);
         console.log('현재 로그인한 유저의 userid:', userId);
-        const response = await fetch(`http://15.165.223.198:3000/users/${id}`);
-        console.log('API 호출 URL:', `http://15.165.223.198:3000/users/${id}`);
+        const response = await fetch(`/api/users/${id}`);
+        console.log('API 호출 URL:', `/api/users/${id}`);
         if (!response.ok) {
           throw new Error(
             `사용자 정보를 불러오지 못했습니다. 상태 코드: ${response.status}`
@@ -56,7 +55,7 @@ function Roomie() {
   useEffect(() => {
     const fetchRoomieData = async () => {
       try {
-        const response = await fetch(`http://15.165.223.198:3000/users/${id}`);
+        const response = await fetch(`/api/users/${id}`);
         if (!response.ok) {
           throw new Error(
             `사용자 정보를 불러오지 못했습니다. 상태 코드: ${response.status}`
@@ -81,7 +80,7 @@ function Roomie() {
     }
 
     try {
-      const response = await fetch('http://15.165.223.198:3000/users/send', {
+      const response = await fetch('/api/users/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -128,12 +127,25 @@ function Roomie() {
             잠버릇 : {roomieData.sleepingHabits && roomieData.sleepingHabits.length > 0
               ? roomieData.sleepingHabits.join(', ')
               : '없음'}
-          </ProfileText>          <ProfileText> 생활 패턴 : {roomieData.lifestyle}</ProfileText>
+          </ProfileText>
+          <ProfileText> 생활 패턴 : {roomieData.lifestyle}</ProfileText>
           <ProfileText> 알람소리 : {roomieData.alarm}</ProfileText>
-          <ProfileText> 물건 공유 : {roomieData.itemSharingPreference}</ProfileText>
-          <ProfileText> 방 안에서 게임 : {roomieData.gamePreference.join(', ')}</ProfileText>
-          <ProfileText> 방 안에서 공부 : {roomieData.studyPreference.join(', ')}</ProfileText>
-          <ProfileText> 방 안 음식물 섭취 : {roomieData.foodPreference.join(', ')}</ProfileText>
+          <ProfileText>
+            {' '}
+            물건 공유 : {roomieData.itemSharingPreference}
+          </ProfileText>
+          <ProfileText>
+            {' '}
+            방 안에서 게임 : {roomieData.gamePreference.join(', ')}
+          </ProfileText>
+          <ProfileText>
+            {' '}
+            방 안에서 공부 : {roomieData.studyPreference.join(', ')}
+          </ProfileText>
+          <ProfileText>
+            {' '}
+            방 안 음식물 섭취 : {roomieData.foodPreference.join(', ')}
+          </ProfileText>
           <ProfileText> 청소 주기 : {roomieData.cleaningFrequency}</ProfileText>
           <ProfileText> MBTI : {roomieData.mbti}</ProfileText>
         </ProfileInfo>
@@ -161,7 +173,6 @@ const Container = styled.div`
   align-items: center; /* 모든 콘텐츠를 중앙 정렬 */
   gap: 20px;
   background-color: #fef9f6; /* 부드러운 톤의 배경색 */
-
 `;
 
 const ProfileInfo = styled.div`
@@ -179,8 +190,6 @@ const ProfileInfo = styled.div`
 
 const ProfileText = styled.div`
   text-align: left;
-
-  
 `;
 
 const MessageSection = styled.div`

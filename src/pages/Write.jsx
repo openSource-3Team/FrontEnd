@@ -13,15 +13,12 @@ function Write() {
     if (id) {
       const fetchPost = async () => {
         try {
-          const response = await fetch(
-            `http://15.165.223.198:3000/posts/${id}`,
-            {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }
-          );
+          const response = await fetch(`/api/posts/${id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
 
           if (response.ok) {
             const data = await response.json();
@@ -51,8 +48,8 @@ function Write() {
     try {
       const response = await fetch(
         id
-          ? `http://15.165.223.198:3000/posts/${id}` // 수정
-          : 'http://15.165.223.198:3000/posts', // 새 글 작성
+          ? `/api/posts/${id}` // 수정
+          : '/api/posts', // 새 글 작성
         {
           method: id ? 'PUT' : 'POST',
           headers: {
@@ -85,7 +82,7 @@ function Write() {
     if (!id) return;
 
     try {
-      const response = await fetch(`http://15.165.223.198:3000/posts/${id}`, {
+      const response = await fetch(`/api/posts/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

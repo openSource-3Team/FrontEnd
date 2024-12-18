@@ -11,7 +11,7 @@ function Community() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://15.165.223.198:3000/posts', {
+        const response = await fetch('/api/posts', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

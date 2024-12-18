@@ -23,16 +23,13 @@ function Forgotpw() {
     setMessage('');
 
     try {
-      const response = await fetch(
-        'http://15.165.223.198:3000/users/password-reset',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
+      const response = await fetch('/api/users/password-reset', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -60,16 +57,13 @@ function Forgotpw() {
     }
 
     try {
-      const response = await fetch(
-        'http://15.165.223.198:3000/users/password-reset/verify',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, code, newPassword }),
-        }
-      );
+      const response = await fetch('/api/users/password-reset/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, code, newPassword }),
+      });
 
       if (response.ok) {
         const data = await response.json();

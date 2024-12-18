@@ -17,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
 function Match() {
   const [Click, setClick] = useState([]);
   const [roomies, setRoomies] = useState([]); // Roomie 상태
-  const [username, setUsername] = useState("사용자"); // 사용자 이름 상태
+  const [username, setUsername] = useState('사용자'); // 사용자 이름 상태
   const [userGender, setUserGender] = useState(null); // 사용자 성별 상태 추가
   const navigate = useNavigate();
 
@@ -35,25 +35,25 @@ function Match() {
     try {
       const userid = localStorage.getItem('userid');
       if (!userid) {
-        console.error("로그인 정보가 없습니다. userid가 존재하지 않습니다.");
+        console.error('로그인 정보가 없습니다. userid가 존재하지 않습니다.');
         return; // userid가 없으면 함수 종료
       }
 
       // GET 요청으로 사용자 정보 가져오기
-      const response = await fetch(`http://15.165.223.198:3000/users/${userid}`);
+      const response = await fetch(`/api/users/${userid}`);
 
       if (!response.ok) {
         throw new Error(`사용자 정보 불러오기 실패: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("불러온 사용자 프로필 데이터:", data);
+      console.log('불러온 사용자 프로필 데이터:', data);
 
       setUsername(data.name); // 사용자 이름 저장
       setUserGender(data.gender); // 성별 상태 설정
 
     } catch (error) {
-      console.error("사용자 정보 오류:", error);
+      console.error('사용자 정보 오류:', error);
     }
   };
 
@@ -92,12 +92,11 @@ function Match() {
         ...(userGender && { gender: userGender }), // gender가 null이 아니면 추가
       };
 
+      console.log('요청 본문:', requestBody); // 필터 요청 데이터 확인
 
-      console.log("요청 본문:", requestBody); // 필터 요청 데이터 확인
-
-      const response = await fetch("http://15.165.223.198:3000/users/filter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/users/filter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody),
       });
 
@@ -106,13 +105,12 @@ function Match() {
       }
 
       const data = await response.json();
-      console.log("필터링된 사용자 리스트:", data);
+      console.log('필터링된 사용자 리스트:', data);
       setRoomies(data); // 상태에 저장
     } catch (error) {
-      console.error("필터링 오류:", error.message);
+      console.error('필터링 오류:', error.message);
     }
   };
-
 
   useEffect(() => {
     fetchUserInfo(); // 사용자 정보 가져오기
@@ -122,20 +120,22 @@ function Match() {
     fetchRoomies(); // 조건 없이 호출
   }, [Click, userGender]);
 
-
   return (
     <>
       <GlobalStyle />
       <Container>
-        <Explain>원하는 Roomie의 특징을 한 개 이상 선택해주세요! <br></br>
+        <Explain>
+          원하는 Roomie의 특징을 한 개 이상 선택해주세요! <br></br>
           그럼 저희가 딱 맞는 Roomie를 Matching해줄게요 <br></br>
           원하는 만큼 선택해도 좋아요.
         </Explain>
         <Filter>
           <FilterGroup>
-            <FilterLabel><br></br>기숙사 생활 기간</FilterLabel>
+            <FilterLabel>
+              <br></br>기숙사 생활 기간
+            </FilterLabel>
             <FilterValues>
-              {["4개월", "6개월", "12개월"].map((value) => (
+              {['4개월', '6개월', '12개월'].map((value) => (
                 <FilterValue
                   key={value}
                   onClick={() => wantOption(value)}
@@ -158,7 +158,7 @@ function Match() {
                 '인문사회과학대학',
                 '정책법학대학',
                 '인제니움학부대학',
-              ].map(item => (
+              ].map((item) => (
                 <FilterValue
                   key={item}
                   onClick={() => wantOption(item)}
@@ -172,24 +172,38 @@ function Match() {
           <FilterGroup>
             <FilterLabel>학번</FilterLabel>
             <FilterValues>
-              {['16학번', '17학번', '18학번', '19학번', '20학번', '21학번', '22학번', '23학번', '24학번'].map(item => (
+              {[
+                '16학번',
+                '17학번',
+                '18학번',
+                '19학번',
+                '20학번',
+                '21학번',
+                '22학번',
+                '23학번',
+                '24학번',
+              ].map((item) => (
                 <FilterValue
                   key={item}
                   onClick={() => wantOption(item)}
                   selected={Click.includes(item)}
-                >{item}</FilterValue>
+                >
+                  {item}
+                </FilterValue>
               ))}
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
             <FilterLabel>기상시간</FilterLabel>
             <FilterValues>
-              {['07:00', '08:00', '09:00', '10:00'].map(item => (
+              {['07:00', '08:00', '09:00', '10:00'].map((item) => (
                 <FilterValue
                   key={item}
                   onClick={() => wantOption(item)}
                   selected={Click.includes(item)}
-                >{item}</FilterValue>
+                >
+                  {item}
+                </FilterValue>
               ))}
             </FilterValues>
           </FilterGroup>
@@ -199,22 +213,26 @@ function Match() {
               <FilterValue
                 onClick={() => wantOption('21:00')}
                 selected={Click.includes('21:00')}
-              >21:00
+              >
+                21:00
               </FilterValue>
               <FilterValue
                 onClick={() => wantOption('22:00')}
                 selected={Click.includes('22:00')}
-              >22:00
+              >
+                22:00
               </FilterValue>
               <FilterValue
                 onClick={() => wantOption('23:00')}
                 selected={Click.includes('23:00')}
-              >23:00
+              >
+                23:00
               </FilterValue>
               <FilterValue
                 onClick={() => wantOption('새벽')}
                 selected={Click.includes('새벽')}
-              >새벽
+              >
+                새벽
               </FilterValue>
             </FilterValues>
           </FilterGroup>
@@ -224,150 +242,212 @@ function Match() {
               <FilterValue
                 onClick={() => wantOption('21:00 ')}
                 selected={Click.includes('21:00 ')}
-              >21:00
+              >
+                21:00
               </FilterValue>
               <FilterValue
                 onClick={() => wantOption('22:00 ')}
                 selected={Click.includes('22:00 ')}
-              >22:00
+              >
+                22:00
               </FilterValue>
               <FilterValue
                 onClick={() => wantOption('23:00 ')}
                 selected={Click.includes('23:00 ')}
-              >23:00
+              >
+                23:00
               </FilterValue>
               <FilterValue
                 onClick={() => wantOption('24:00 ')}
                 selected={Click.includes('24:00 ')}
-              >24:00
+              >
+                24:00
               </FilterValue>
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
             <FilterLabel>샤워시간</FilterLabel>
             <FilterValues>
-              {['외출 전', '귀가 후', '둘 다'].map(item => (
+              {['외출 전', '귀가 후', '둘 다'].map((item) => (
                 <FilterValue
                   key={item}
                   onClick={() => wantOption(item)}
                   selected={Click.includes(item)}
-                >{item}</FilterValue>
+                >
+                  {item}
+                </FilterValue>
               ))}
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
             <FilterLabel>흡연 여부</FilterLabel>
             <FilterValues>
-              {['흡연자', '비흡연자'].map(item => (
+              {['흡연자', '비흡연자'].map((item) => (
                 <FilterValue
                   key={item}
                   onClick={() => wantOption(item)}
                   selected={Click.includes(item)}
-                >{item}</FilterValue>
+                >
+                  {item}
+                </FilterValue>
               ))}
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
             <FilterLabel>잠버릇</FilterLabel>
             <FilterValues>
-              {['코골이', '이갈이', '몽유병', '잠꼬대'].map(item => (
+              {['코골이', '이갈이', '몽유병', '잠꼬대'].map((item) => (
                 <FilterValue
                   key={item}
                   onClick={() => wantOption(item)}
                   selected={Click.includes(item)}
-                >{item}</FilterValue>
+                >
+                  {item}
+                </FilterValue>
               ))}
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
             <FilterLabel>생활패턴</FilterLabel>
             <FilterValues>
-              {['아침형', '저녁형', '새벽형'].map(item => (
+              {['아침형', '저녁형', '새벽형'].map((item) => (
                 <FilterValue
                   key={item}
                   onClick={() => wantOption(item)}
                   selected={Click.includes(item)}
-                >{item}</FilterValue>
+                >
+                  {item}
+                </FilterValue>
               ))}
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
             <FilterLabel>알람소리</FilterLabel>
             <FilterValues>
-              {['민감', '둔감'].map(item => (
+              {['민감', '둔감'].map((item) => (
                 <FilterValue
                   key={item}
                   onClick={() => wantOption(item)}
                   selected={Click.includes(item)}
-                >{item}</FilterValue>
+                >
+                  {item}
+                </FilterValue>
               ))}
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
             <FilterLabel>물건 공유 여부</FilterLabel>
             <FilterValues>
-              {['공유해요', '공유하기 싫어요'].map(item => (
+              {['공유해요', '공유하기 싫어요'].map((item) => (
                 <FilterValue
                   key={item}
                   onClick={() => wantOption(item)}
                   selected={Click.includes(item)}
-                >{item}</FilterValue>
+                >
+                  {item}
+                </FilterValue>
               ))}
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
             <FilterLabel>방에서 게임</FilterLabel>
             <FilterValues>
-              {['PC 게임', '모바일 게임', '가끔 이해할 수 있어요', '아예 안돼요'].map(item => (
+              {[
+                'PC 게임',
+                '모바일 게임',
+                '가끔 이해할 수 있어요',
+                '아예 안돼요',
+              ].map((item) => (
                 <FilterValue
                   key={item}
                   onClick={() => wantOption(item)}
                   selected={Click.includes(item)}
-                >{item}</FilterValue>
+                >
+                  {item}
+                </FilterValue>
               ))}
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
             <FilterLabel>방 안 공부</FilterLabel>
             <FilterValues>
-              {['스탠드 켜고 하면 가능해요', '불 켜고 해도 돼요', '공부 안돼요'].map(item => (
+              {[
+                '스탠드 켜고 하면 가능해요',
+                '불 켜고 해도 돼요',
+                '공부 안돼요',
+              ].map((item) => (
                 <FilterValue
                   key={item}
                   onClick={() => wantOption(item)}
                   selected={Click.includes(item)}
-                >{item}</FilterValue>
+                >
+                  {item}
+                </FilterValue>
               ))}
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
             <FilterLabel>방 안 음식물 섭취</FilterLabel>
             <FilterValues>
-              {['음료', '간단한 간식', '식사', '배달음식', '섭취 안돼요'].map(item => (
-                <FilterValue
-                  key={item}
-                  onClick={() => wantOption(item)}
-                  selected={Click.includes(item)}
-                >{item}</FilterValue>
-              ))}
+              {['음료', '간단한 간식', '식사', '배달음식', '섭취 안돼요'].map(
+                (item) => (
+                  <FilterValue
+                    key={item}
+                    onClick={() => wantOption(item)}
+                    selected={Click.includes(item)}
+                  >
+                    {item}
+                  </FilterValue>
+                )
+              )}
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
             <FilterLabel>청소 주기</FilterLabel>
             <FilterValues>
-              {['매일 항상 깨끗이', '2~3일에 한 번씩', '일주일에 한 번', '한 달에 한 번', '아예 안해요'].map(item => (
+              {[
+                '매일 항상 깨끗이',
+                '2~3일에 한 번씩',
+                '일주일에 한 번',
+                '한 달에 한 번',
+                '아예 안해요',
+              ].map((item) => (
                 <FilterValue
                   key={item}
                   onClick={() => wantOption(item)}
                   selected={Click.includes(item)}
-                >{item}</FilterValue>
+                >
+                  {item}
+                </FilterValue>
               ))}
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
             <FilterLabel>MBTI</FilterLabel>
             <FilterValues>
-              {['ESTJ', 'ESTP', 'ESFJ', 'ESFP', 'ENTJ', 'ENTP', 'ENFJ', 'ENFP', 'ISTJ', 'ISTP', 'ISFJ', 'ISFP', 'INTJ', 'INTP', 'INFJ', 'INFP'].map((value) => (
-                <FilterValue key={value} onClick={() => wantOption(value)} selected={Click.includes(value)}>
+              {[
+                'ESTJ',
+                'ESTP',
+                'ESFJ',
+                'ESFP',
+                'ENTJ',
+                'ENTP',
+                'ENFJ',
+                'ENFP',
+                'ISTJ',
+                'ISTP',
+                'ISFJ',
+                'ISFP',
+                'INTJ',
+                'INTP',
+                'INFJ',
+                'INFP',
+              ].map((value) => (
+                <FilterValue
+                  key={value}
+                  onClick={() => wantOption(value)}
+                  selected={Click.includes(value)}
+                >
                   {value}
                 </FilterValue>
               ))}
@@ -377,15 +457,20 @@ function Match() {
 
         <HorizonLine text="Roomie" />
 
-        <Explain> 아래는 {username}님과 딱 맞는 루미들이에요. <br></br>
+        <Explain>
+          {' '}
+          아래는 {username}님과 딱 맞는 루미들이에요. <br></br>
           프로필을 눌러 세부사항도 확인해보세요.
         </Explain>
 
         <ProfileContainer>
           {roomies.length > 0 ? (
             roomies.map((roomie) => (
-              <Profile key={roomie.id} onClick={() => navigate(`/roomie/${roomie.id}`)}>
-                <ProfileIcon/>
+              <Profile
+                key={roomie.id}
+                onClick={() => navigate(`/roomie/${roomie.id}`)}
+              >
+                <ProfileIcon />
                 <RoomieBox>
                   <Roomietext>{roomie.name}</Roomietext>
                   <Roomietext>{roomie.department}</Roomietext>
@@ -398,12 +483,10 @@ function Match() {
         </ProfileContainer>
       </Container>
     </>
-  )
+  );
 }
 
 export default Match;
-
-
 
 const Container = styled.div`
   width: 100%;
@@ -417,10 +500,10 @@ const Container = styled.div`
 `;
 
 const Explain = styled.div`
-text-align: center;
-padding : 10px;
-width: 60%; /* 부모 컨테이너의 전체 너비를 차지 */
-font-size:20px;
+  text-align: center;
+  padding: 10px;
+  width: 60%; /* 부모 컨테이너의 전체 너비를 차지 */
+  font-size: 20px;
 `;
 
 const Filter = styled.div`
@@ -476,8 +559,8 @@ const HorizonLineContainer = styled.div`
   text-align: center;
   border-bottom: 1px solid #aaa;
   line-height: 0.1em;
-  margin-top : 40px;
-  margin-bottom : 10px;
+  margin-top: 40px;
+  margin-bottom: 10px;
 `;
 
 const HorizonLineText = styled.span`
@@ -490,7 +573,6 @@ const HorizonLine = ({ text }) => (
     <HorizonLineText>{text}</HorizonLineText>
   </HorizonLineContainer>
 );
-
 
 const ProfileContainer = styled.div`
   display: grid;
@@ -509,7 +591,7 @@ const Profile = styled.div`
   background-color: white;
   gap: 10px;
   width: 300px; /* 각 프로필의 고정된 너비 설정 */
-  margin : 15px 0 15px;
+  margin: 15px 0 15px;
 
   &:hover {
     background-color: #f5e9e7; /* 부드러운 포인트 색으로 변경 */

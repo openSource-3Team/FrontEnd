@@ -21,15 +21,12 @@ function PostView() {
 
     const fetchPost = async () => {
       try {
-        const response = await fetch(
-          `http://15.165.223.198:3000/posts/${postId}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        const response = await fetch(`/api/posts/${postId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -45,15 +42,12 @@ function PostView() {
 
     const fetchComments = async () => {
       try {
-        const response = await fetch(
-          `http://15.165.223.198:3000/comments/${postId}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        const response = await fetch(`/api/comments/${postId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -79,7 +73,7 @@ function PostView() {
     if (!newComment.trim()) return;
 
     try {
-      const response = await fetch('http://15.165.223.198:3000/comments', {
+      const response = await fetch('/api/comments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,15 +99,12 @@ function PostView() {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      const response = await fetch(
-        `http://15.165.223.198:3000/comments/${commentId}`,
-        {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await fetch(`/api/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (response.ok) {
         setComments((prev) =>
@@ -129,16 +120,13 @@ function PostView() {
 
   const handleEditComment = async (commentId, updatedContent) => {
     try {
-      const response = await fetch(
-        `http://15.165.223.198:3000/comments/${commentId}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ content: updatedContent }),
-        }
-      );
+      const response = await fetch(`/api/${commentId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: updatedContent }),
+      });
 
       if (response.ok) {
         setComments((prev) =>
@@ -157,8 +145,8 @@ function PostView() {
   };
   const handleLike = async () => {
     const endpoint = userLiked
-      ? `http://15.165.223.198:3000/posts/${postId}/dislike`
-      : `http://15.165.223.198:3000/posts/${postId}/like`;
+      ? `/api/posts/${postId}/dislike`
+      : `/api/posts/${postId}/like`;
 
     try {
       const response = await fetch(endpoint, {
