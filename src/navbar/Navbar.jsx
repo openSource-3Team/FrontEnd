@@ -19,13 +19,10 @@ const Navbar = () => {
 
   const fetchNotifications = async (userid) => {
     try {
-      const response = await fetch(
-        `http://15.165.223.198:3000/users/received/${userid}`,
-        {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+      const response = await fetch(`/api/users/received/${userid}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
 
       if (response.ok) {
         const data = await response.json();

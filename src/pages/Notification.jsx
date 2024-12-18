@@ -17,15 +17,12 @@ function Notification() {
       }
 
       try {
-        const response = await fetch(
-          `http://15.165.223.198:3000/users/received/${userId}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        const response = await fetch(`/api/users/received/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();

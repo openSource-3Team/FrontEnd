@@ -254,7 +254,7 @@ function Profile() {
     }
 
     const userid = localStorage.getItem('userid');
-    const url = `http://15.165.223.198:3000/users/${userid}/profile`;
+    const url = `/api/users/${userid}/profile`;
 
     const formData = new FormData();
 
