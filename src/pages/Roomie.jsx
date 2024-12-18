@@ -2,19 +2,21 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
-import tempImage from '../images/ppotto.png';
+import { FaUserCircle } from 'react-icons/fa';
 
 // 글로벌 스타일 설정
 const GlobalStyle = createGlobalStyle`
-  html, body, #root {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-  }
+    html, body, #root {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+        background-color: #fef9f6; /* 부드러운 톤의 배경색 */
+    }
 `;
+
 
 function Roomie() {
   const { id } = useParams(); // URL 파라미터에서 ID 가져오기
@@ -106,55 +108,31 @@ function Roomie() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>오류 발생: {error}</div>;
 
-  // // 임시 데이터 (프로필 정보)
-  // const roomieData = {
-  //   name: '김소정',
-  //   year: '21학번',
-  //   department: '인공지능융합대학',
-  //   dormPeriod: '6개월',
-  //   wakeUpTime: '09:00',
-  //   sleepTime: '23:00',
-  //   lightsOut: '22:00',
-  //   showerTime: '귀가 후',
-  //   smoking: '비흡연자',
-  //   sleepHabit: ['없음', '잠꼬대'],
-  //   lifestyle: '아침형',
-  //   alarmSensitivity: '둔감',
-  //   shareItems: '공유해요',
-  //   gaming: 'PC 게임',
-  //   studying: '불 켜고 해도 돼요',
-  //   eating: '간단한 간식',
-  //   cleaningFrequency: '일주일에 한 번',
-  //   mbti: 'INFP'
-  // };
-
   return (
     <>
       <GlobalStyle />
       <Container>
-        <ProfileImage
-          src={roomieData.imageData ? roomieData.imageData : tempImage}
-          alt="Roomie Profile"
-        />
+        <ProfileIcon />
         <ProfileInfo>
           <ProfileText>이름: {roomieData.name}</ProfileText>
-          {/* <ProfileText> {roomieData.year}</ProfileText> */}
+          <ProfileText> 학번 : {roomieData.studentId}</ProfileText>
+          <ProfileText> 성별 : {roomieData.gender}</ProfileText>
           <ProfileText>학과: {roomieData.department}</ProfileText>
-          <ProfileText>기숙사: {roomieData.dormitory}</ProfileText>
-          {/* <ProfileText> {roomieData.wakeUpTime}</ProfileText>
-          <ProfileText> {roomieData.sleepTime}</ProfileText>
-          <ProfileText> {roomieData.lightsOut}</ProfileText>
-          <ProfileText> {roomieData.showerTime}</ProfileText>
-          <ProfileText> {roomieData.smoking}</ProfileText>
-          <ProfileText> {roomieData.sleepHabit.join(', ')}</ProfileText>
-          <ProfileText> {roomieData.lifestyle}</ProfileText>
-          <ProfileText> {roomieData.alarmSensitivity}</ProfileText>
-          <ProfileText> {roomieData.shareItems}</ProfileText>
-          <ProfileText> {roomieData.gaming}</ProfileText>
-          <ProfileText> {roomieData.studying}</ProfileText>
-          <ProfileText> {roomieData.eating}</ProfileText>
-          <ProfileText> {roomieData.cleaningFrequency}</ProfileText>
-          <ProfileText> {roomieData.mbti}</ProfileText> */}
+          <ProfileText>기숙사: {roomieData.dormitoryDuration}</ProfileText>
+          <ProfileText> 기상시간 : {roomieData.wakeUpTime}</ProfileText>
+          <ProfileText> 취침시간 : {roomieData.sleepingTime}</ProfileText>
+          <ProfileText> 소등시간 : {roomieData.lightOutTime}</ProfileText>
+          <ProfileText> 샤워시간 : {roomieData.showerTime}</ProfileText>
+          <ProfileText> 흡연 여부 : {roomieData.isSmoking ? '흡연' : '비흡연'} </ProfileText>
+          <ProfileText> 잠버릇 : {roomieData.sleepingHabits.join(', ')}</ProfileText>
+          <ProfileText> 생활 패턴 : {roomieData.lifestyle}</ProfileText>
+          <ProfileText> 알람소리 : {roomieData.alarm}</ProfileText>
+          <ProfileText> 물건 공유 : {roomieData.itemSharingPreference}</ProfileText>
+          <ProfileText> 방 안에서 게임 : {roomieData.gamePreference.join(', ')}</ProfileText>
+          <ProfileText> 방 안에서 공부 : {roomieData.studyPreference.join(', ')}</ProfileText>
+          <ProfileText> 방 안 음식물 섭취 : {roomieData.foodPreference.join(', ')}</ProfileText>
+          <ProfileText> 청소 주기 : {roomieData.cleaningFrequency}</ProfileText>
+          <ProfileText> MBTI : {roomieData.mbti}</ProfileText>
         </ProfileInfo>
         <MessageSection>
           <MessageInput
@@ -179,17 +157,12 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center; /* 모든 콘텐츠를 중앙 정렬 */
   gap: 20px;
-`;
+  background-color: #fef9f6; /* 부드러운 톤의 배경색 */
 
-const ProfileImage = styled.img`
-  width: 150px;
-  height: 150px;
-  border-radius: 50%; /* 원형 이미지 */
-  object-fit: cover; /* 이미지 비율 유지 */
 `;
 
 const ProfileInfo = styled.div`
-  width: 20%;
+  width: 25%;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -198,17 +171,21 @@ const ProfileInfo = styled.div`
   border: 2px solid #a72b0c;
   border-radius: 10px;
   background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
 `;
 
 const ProfileText = styled.div`
   text-align: left;
+
+  
 `;
 
 const MessageSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 300px;
+  width: 540px;
 `;
 
 const MessageInput = styled.textarea`
@@ -235,4 +212,10 @@ const SendButton = styled.button`
   &:hover {
     background-color: #87200a;
   }
+`;
+
+const ProfileIcon = styled(FaUserCircle)`
+  color: #a72b0c;
+  font-size: 200px;
+  margin-right: 5px;
 `;
