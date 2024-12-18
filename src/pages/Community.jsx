@@ -112,14 +112,15 @@ function Community() {
 export default Community;
 
 const Container = styled.div`
+  width: 210vh;
+
   max-width: 1000px;
-  width: 100%;
-  position: fixed;
-  top: 25%;
-  left: 25%;
+  padding: 0 450px;
   color: #333;
   font-size: 16px;
   font-family: 'Arial', sans-serif;
+  align-items: flex-start; /* 상단 여백 조정 */
+  margin-top: 150px; /* 네브바와 겹치지 않도록 여백 추가 */
 `;
 
 const TableHeader = styled.div`
