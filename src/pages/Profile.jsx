@@ -254,63 +254,66 @@ function Profile() {
     }
 
     const userid = localStorage.getItem('userid');
+    if (!userid) {
+      alert('사용자 ID가 없습니다. 다시 로그인하세요.');
+      return;
+    }
+    console.log('userid:', userid);
     const url = `/api/users/${userid}/profile`;
 
-    const formData = new FormData();
+    const profileData = {
+      name: userName?.trim() || "John Doe",
+      gender: selectedGender || null,
+      phoneNumber: phoneNumber?.trim() || "010-1234-5678",
+      dormitoryDuration: selectedDorm?.value || null,
+      department: selectedMajor?.value || null,
+      studentId: selectedStudentNumber?.value || null,
+      lifestyle: selectedLifestyle || null,
+      isSmoking: selectedIsSmoker === "흡연자" ? true : false,
+      wakeUpTime: selectedWakeup || null,
+      sleepingTime: selectedGotobed || null,
+      lightOutTime: selectedOfflight || null, // Avoid empty string
+      showerTime: selectedShowerTime || null,
+      cleaningFrequency: selectedCleaning?.value || null,
+      itemSharingPreference: selectedShare || null,
+      alarm: selectedAlarm || null,
+      mbti: selectedMbti?.value || null,
+      sleepingHabits: selectedSleephabits.length ? selectedSleephabits : null,
+      gamePreferences: selectedGame.length ? selectedGame : null,
+      studyPreferences: selectedStudy.length ? selectedStudy : null,
+      foodPreferences: selectedFood.length ? selectedFood : null,
+  };
 
-    formData.append('name', userName?.trim() || 'John Doe');
-    formData.append('email', userid);
+  console.log("profileData 확인:", profileData);
 
-    formData.append('gender', selectedGender || '');
-    formData.append('phoneNumber', phoneNumber?.trim() || '010-1234-5678');
-    formData.append('dormitoryDuration', selectedDorm?.value || '');
-    formData.append('department', selectedMajor?.value || '');
-    formData.append('studentId', selectedStudentNumber?.value || '');
-    formData.append('lifestyle', selectedLifestyle || '');
-    formData.append('isSmoking', selectedIsSmoker === '흡연자' ? true : false);
-    formData.append('wakeUpTime', selectedWakeup || '');
-    formData.append('sleepingTime', selectedGotobed || '');
-    formData.append('lightOutTime', selectedOfflight || '');
-    formData.append('showerTime', selectedShowerTime || '');
-    formData.append('cleaningFrequency', selectedCleaning?.value || '');
-    formData.append('itemSharingPreference', selectedShare || '');
-    formData.append('alarm', selectedAlarm || '');
-    formData.append('mbti', selectedMbti?.value || '');
-
-    selectedSleephabits?.forEach((sleephabits) =>
-      formData.append('sleepingHabits', sleephabits)
-    );
-    selectedGame?.forEach((game) => formData.append('gamePreferences', game));
-    selectedStudy?.forEach((study) =>
-      formData.append('studyPreferences', study)
-    );
-    selectedFood?.forEach((food) => formData.append('foodPreferences', food));
-
-    console.log('FormData 확인:');
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
-
-    try {
+  try {
       const response = await fetch(url, {
-        method: 'PUT',
-        body: formData,
+          method: "PUT",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(profileData), // Convert the payload to JSON string
       });
 
       if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(errorMessage || '알 수 없는 오류 발생');
+          let errorMessage = "서버 오류 발생";
+          try {
+              const errorData = await response.json();
+              errorMessage = errorData.message || errorMessage;
+          } catch {
+              console.error("Error parsing error response");
+          }
+          throw new Error(errorMessage);
       }
 
       const responseData = await response.json();
-      console.log('프로필 저장 성공:', responseData);
-      alert('프로필이 성공적으로 저장되었습니다!');
-      navigate('/match'); // 로그인 페이지로 이동
-    } catch (error) {
-      console.error('프로필 저장 실패:', error.message);
+      console.log("프로필 저장 성공:", responseData);
+      alert("프로필이 성공적으로 저장되었습니다!");
+  } catch (error) {
+      console.error("프로필 저장 실패:", error.message);
       alert(`저장 실패: ${error.message}`);
-    }
-  };
+  }
+};
 
   return (
     <>
