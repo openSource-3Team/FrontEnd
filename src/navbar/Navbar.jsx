@@ -3,77 +3,25 @@ import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaUserCircle, FaBell } from 'react-icons/fa';
 
-function Navbar() {
+const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
   const navigate = useNavigate();
 
-  // 컴포넌트가 마운트될 때 localStorage에서 userid 확인
   useEffect(() => {
     const userid = localStorage.getItem('userid');
-    if (userid) {
-      setIsLoggedIn(true);
-    }
+    setIsLoggedIn(!!userid);
   }, []);
 
-  // 알림 개수 가져오기 함수 수정
-  const fetchNotifications = async () => {
-    const userId = localStorage.getItem('userid'); // 사용자 ID 가져오기
-    if (!userId) return;
-
-    try {
-      const response = await fetch(
-        `http://15.165.223.198:3000/users/received/${userId}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        if (Array.isArray(data.result)) {
-          // 응답이 배열일 경우 개수를 설정
-          setNotificationCount(data.result.length || 0);
-        } else {
-          console.error('Unexpected response format:', data);
-          setNotificationCount(0); // 데이터 형식이 예상과 다를 경우 초기화
-        }
-      } else {
-        console.error('Failed to fetch notifications');
-        setNotificationCount(0); // 실패 시 초기화
-      }
-    } catch (error) {
-      console.error('Error fetching notifications:', error);
-      setNotificationCount(0); // 오류 시 초기화
-    }
-  };
-
-  // useEffect에 fetchNotifications 호출
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
-
-  // 로그아웃 핸들러
-  const handleLogout = () => {
-    localStorage.removeItem('userid'); // 필요 시 다른 사용자 정보도 제거
-    setIsLoggedIn(false);
-    navigate('/login'); // 로그아웃 후 홈으로 이동
-  };
-
-  // 알림 클릭 핸들러
-  const handleNotificationClick = () => {
-    const userid = localStorage.getItem('userid'); // 로컬 스토리지에서 userid 확인
-
+  const handleAuthNavigation = (path) => {
+    const userid = localStorage.getItem('userid');
     if (!userid) {
       alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-      navigate('/login'); // 로그인 페이지로 이동
-      return;
+      navigate('/login');
+    } else {
+      console.log(`Navigating to: ${path}`); // 디버깅용 로그 추가
+      navigate(path);
     }
-
-    navigate('/notification'); // 알림 페이지로 이동
   };
 
   return (
@@ -90,18 +38,28 @@ function Navbar() {
         </MidSection>
         <RightSection>
           {isLoggedIn ? (
-            <LogButton onClick={handleLogout}>LOGOUT</LogButton>
+            <LogButton
+              onClick={() => {
+                localStorage.removeItem('userid');
+                setIsLoggedIn(false);
+                navigate('/login');
+              }}
+            >
+              LOGOUT
+            </LogButton>
           ) : (
             <LogButton as={Link} to="/login">
               LOGIN
             </LogButton>
           )}
           <>
-            <ProfileButton as={Link} to="/profile">
+            <ProfileButton onClick={() => handleAuthNavigation('/profile')}>
               <ProfileIcon />
               PROFILE
             </ProfileButton>
-            <NotificationWrapper onClick={handleNotificationClick}>
+            <NotificationWrapper
+              onClick={() => handleAuthNavigation('/notification')}
+            >
               <NotificationIcon />
               {notificationCount > 0 && <Badge>{notificationCount}</Badge>}
             </NotificationWrapper>
@@ -113,7 +71,7 @@ function Navbar() {
           <NavButton as={Link} to="/community">
             Community
           </NavButton>
-          <NavButton as={Link} to="/match">
+          <NavButton onClick={() => handleAuthNavigation('/match')}>
             Matching
           </NavButton>
           <NavButton
@@ -128,7 +86,7 @@ function Navbar() {
       </Bottom>
     </NavbarContainer>
   );
-}
+};
 
 export default Navbar;
 
@@ -270,7 +228,7 @@ const NavButton = styled.div`
   }
 `;
 
-const ProfileButton = styled(Link)`
+const ProfileButton = styled.div`
   display: flex;
   align-items: center;
   background: none;
