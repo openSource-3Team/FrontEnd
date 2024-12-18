@@ -3,77 +3,46 @@ import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaUserCircle, FaBell } from 'react-icons/fa';
 
-function Navbar() {
+const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
   const navigate = useNavigate();
 
-  // 컴포넌트가 마운트될 때 localStorage에서 userid 확인
   useEffect(() => {
     const userid = localStorage.getItem('userid');
+    setIsLoggedIn(!!userid);
+
     if (userid) {
-      setIsLoggedIn(true);
+      fetchNotifications(userid);
     }
   }, []);
 
-  // 알림 개수 가져오기 함수 수정
-  const fetchNotifications = async () => {
-    const userId = localStorage.getItem('userid'); // 사용자 ID 가져오기
-    if (!userId) return;
-
+  const fetchNotifications = async (userid) => {
     try {
-      const response = await fetch(
-        `http://15.165.223.198:3000/users/received/${userId}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await fetch(`/api/users/received/${userid}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
 
       if (response.ok) {
         const data = await response.json();
-        if (Array.isArray(data.result)) {
-          // 응답이 배열일 경우 개수를 설정
-          setNotificationCount(data.result.length || 0);
-        } else {
-          console.error('Unexpected response format:', data);
-          setNotificationCount(0); // 데이터 형식이 예상과 다를 경우 초기화
-        }
+        setNotificationCount(data.result?.length || 0); // 알림 개수 설정
       } else {
-        console.error('Failed to fetch notifications');
-        setNotificationCount(0); // 실패 시 초기화
+        console.error('알림 데이터를 가져오는 데 실패했습니다.');
       }
     } catch (error) {
-      console.error('Error fetching notifications:', error);
-      setNotificationCount(0); // 오류 시 초기화
+      console.error('알림 데이터를 가져오는 중 오류:', error);
     }
   };
 
-  // useEffect에 fetchNotifications 호출
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
-
-  // 로그아웃 핸들러
-  const handleLogout = () => {
-    localStorage.removeItem('userid'); // 필요 시 다른 사용자 정보도 제거
-    setIsLoggedIn(false);
-    navigate('/login'); // 로그아웃 후 홈으로 이동
-  };
-
-  // 알림 클릭 핸들러
-  const handleNotificationClick = () => {
-    const userid = localStorage.getItem('userid'); // 로컬 스토리지에서 userid 확인
-
+  const handleAuthNavigation = (path) => {
+    const userid = localStorage.getItem('userid');
     if (!userid) {
       alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-      navigate('/login'); // 로그인 페이지로 이동
-      return;
+      navigate('/login');
+    } else {
+      navigate(path);
     }
-
-    navigate('/notification'); // 알림 페이지로 이동
   };
 
   return (
@@ -90,22 +59,30 @@ function Navbar() {
         </MidSection>
         <RightSection>
           {isLoggedIn ? (
-            <LogButton onClick={handleLogout}>LOGOUT</LogButton>
+            <LogButton
+              onClick={() => {
+                localStorage.removeItem('userid');
+                setIsLoggedIn(false);
+                navigate('/login');
+              }}
+            >
+              LOGOUT
+            </LogButton>
           ) : (
             <LogButton as={Link} to="/login">
               LOGIN
             </LogButton>
           )}
-          <>
-            <ProfileButton as={Link} to="/profile">
-              <ProfileIcon />
-              PROFILE
-            </ProfileButton>
-            <NotificationWrapper onClick={handleNotificationClick}>
-              <NotificationIcon />
-              {notificationCount > 0 && <Badge>{notificationCount}</Badge>}
-            </NotificationWrapper>
-          </>
+          <ProfileButton onClick={() => handleAuthNavigation('/profile')}>
+            <ProfileIcon />
+            PROFILE
+          </ProfileButton>
+          <NotificationWrapper
+            onClick={() => handleAuthNavigation('/notification')}
+          >
+            <NotificationIcon />
+            {notificationCount > 0 && <Badge>{notificationCount}</Badge>}
+          </NotificationWrapper>
         </RightSection>
       </Top>
       <Bottom>
@@ -113,7 +90,7 @@ function Navbar() {
           <NavButton as={Link} to="/community">
             Community
           </NavButton>
-          <NavButton as={Link} to="/match">
+          <NavButton onClick={() => handleAuthNavigation('/match')}>
             Matching
           </NavButton>
           <NavButton
@@ -128,7 +105,7 @@ function Navbar() {
       </Bottom>
     </NavbarContainer>
   );
-}
+};
 
 export default Navbar;
 
@@ -146,13 +123,10 @@ const NavbarContainer = styled.div`
 `;
 
 const Top = styled.div`
-  /* Desktop layout */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 35px 40px;
-
-  /* Responsive layout */
   @media (max-width: 768px) {
     flex-direction: column;
     padding: 30px 20px;
@@ -164,18 +138,13 @@ const Name = styled(Link)`
   color: #333;
   text-decoration: none;
   font-weight: 600;
-  margin-left: 50px;
   display: flex;
   align-items: center;
-
   &:hover {
     color: #333;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   }
-
-  /* Responsive font size */
   @media (max-width: 768px) {
-    margin-left: 0;
     font-size: 27px;
   }
 `;
@@ -183,7 +152,6 @@ const Name = styled(Link)`
 const LeftSection = styled.div`
   display: flex;
   align-items: center;
-  /* On smaller screens, center the content */
   @media (max-width: 768px) {
     justify-content: center;
     width: 100%;
@@ -193,12 +161,7 @@ const LeftSection = styled.div`
 const MidSection = styled.div`
   color: #333;
   font-size: 20px;
-
-  /* On smaller screens, center and reduce font size */
   @media (max-width: 768px) {
-    margin-right: 0;
-    margin-top: 20px;
-    margin-bottom: 20px;
     font-size: 20px;
     text-align: center;
     width: 100%;
@@ -210,81 +173,17 @@ const Highlight = styled.span`
   font-size: 24px;
   color: #a72b0c;
   margin-right: 15px;
-
   @media (max-width: 768px) {
     font-size: 25px;
-    margin-right: 10px;
   }
 `;
 
 const RightSection = styled.div`
   display: flex;
   gap: 15px;
-  margin: 0 20px;
-  /* On smaller screens, center the elements */
   @media (max-width: 768px) {
     justify-content: center;
     width: 100%;
-    margin-bottom: 20px;
-  }
-`;
-
-const Bottom = styled.div`
-  border-top: 2px solid #333;
-  border-bottom: 2px solid #333;
-  padding: 3px 40px;
-  background-color: white;
-
-  /* On smaller screens, adjust padding */
-  @media (max-width: 768px) {
-    padding: 10px 20px;
-  }
-`;
-
-const BottomSection = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-
-  /* On smaller screens, adjust layout */
-  @media (max-width: 768px) {
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-`;
-
-const NavButton = styled.div`
-  /* Button style */
-  background: none;
-  color: #333;
-  border: none;
-  padding: 10px 10px;
-  margin: 0 6px;
-  cursor: pointer;
-  font-size: 20px;
-
-  &:hover {
-    color: #333;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const ProfileButton = styled(Link)`
-  display: flex;
-  align-items: center;
-  background: none;
-  color: #333;
-  border: none;
-  padding: 8px 10px;
-  margin: 0 20px;
-  cursor: pointer;
-  font-size: 20px;
-  text-decoration: none;
-
-  &:hover {
-    color: #333;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   }
 `;
 
@@ -292,6 +191,7 @@ const NotificationWrapper = styled.div`
   margin: 0 10px;
   position: relative;
   display: flex;
+
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -304,14 +204,15 @@ const NotificationIcon = styled(FaBell)`
 
 const Badge = styled.div`
   position: absolute;
-  top: 1px;
-  right: -7px;
-  background-color: #a72b0c; /* 배경색 */
+  top: -1px;
+  right: -10px;
+  background-color: #a72b0c; /* 포인트 색상 */
   color: white; /* 텍스트 색상 */
-  font-size: 10px;
+  font-size: 12px;
   font-weight: bold;
-  border-radius: 100%;
-  padding: 3px 7px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -325,17 +226,58 @@ const LogButton = styled.div`
   border-radius: 8px;
   cursor: pointer;
   font-size: 20px;
-
   display: flex;
   align-items: center;
-
   &:hover {
     background-color: #a72b0c;
     color: white;
   }
 `;
 
-// 아이콘
+const ProfileButton = styled.div`
+  display: flex;
+  align-items: center;
+  background: none;
+  color: #333;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 20px;
+  &:hover {
+    color: #333;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const Bottom = styled.div`
+  border-top: 2px solid #333;
+  border-bottom: 2px solid #333;
+  padding: 3px 40px;
+  background-color: white;
+  @media (max-width: 768px) {
+    padding: 10px 20px;
+  }
+`;
+
+const BottomSection = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+`;
+
+const NavButton = styled.div`
+  background: none;
+  color: #333;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  &:hover {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+`;
+
 const HomeIcon = styled(FaHome)`
   color: #a72b0c;
   margin-right: 10px;

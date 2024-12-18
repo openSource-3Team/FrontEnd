@@ -40,15 +40,15 @@ function Signup() {
 
     setErrors({});
 
-      console.log('Sending payload:', { email, password });
+    console.log('Sending payload:', { email, password });
     try {
       // Send POST request to /users/register
-      const response = await fetch('http://15.165.223.198:3000/users/register', {
+      const response = await fetch('/api/users/register', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
 
       if (response.ok) {

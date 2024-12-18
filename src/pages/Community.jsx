@@ -11,7 +11,7 @@ function Community() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://15.165.223.198:3000/posts', {
+        const response = await fetch('/api/posts', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -126,51 +126,51 @@ const TableHeader = styled.div`
   font-size: 17px;
   display: grid;
   grid-template-columns: 5fr 5fr 0.8fr;
-  padding: 10px 30px;
-  border: 2px solid #a72b0c;
-  background-color: #ffffff;
+  padding: 15px 30px;
+  background-color: #f5e9e7;
+  color: #a72b0c; /* 글씨는 포인트 색 */
   font-weight: bold;
   border-radius: 12px;
   margin-bottom: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 더 약한 그림자 */
 `;
 
 const ContentContainer = styled.div`
   border-radius: 0 0 12px 12px;
   overflow: hidden;
+  background-color: #f7f8fa; /* 부드러운 배경색 추가 */
 `;
 
 const ContentRow = styled.div`
   display: grid;
   grid-template-columns: 2fr 9fr 2.5fr;
-  padding: 17px 30px;
+  padding: 15px 25px;
   justify-items: start; /* 기본 정렬 */
   align-items: center; /* 기본 정렬 */
   border-radius: 12px;
-  border: 2px solid #a72b0c;
+  border: 1px solid #a72b0c; /* 부드러운 테두리 */
   margin-bottom: 12px;
-  background-color: #fff;
+  background-color: #ffffff; /* 흰색 배경 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: #f9e9e5;
-    transform: scale(1.0009);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #f5e9e7; /* 부드러운 포인트 색으로 변경 */
+    transform: scale(1.001); /* 약간의 확대 효과 */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* 그림자 강화 */
   }
 
   // 두 번째 div에만 스타일 적용
   div:nth-child(2) {
     justify-self: center; /* 그리드 아이템을 수평 가운데 정렬 */
-    color: #666; /* 회색 */
+    color: #555; /* 더 부드러운 회색 */
   }
 
   // 세 번째 div에만 스타일 적용
   div:nth-child(3) {
     font-size: 14px; /* 작은 글씨 크기 */
-    color: #666; /* 회색 */
-    justify-self: right; /* 그리드 아이템을 수평 가운데 정렬 */
+    color: #777; /* 더 밝은 회색 */
+    justify-self: right; /* 그리드 아이템을 오른쪽 정렬 */
   }
 `;
 

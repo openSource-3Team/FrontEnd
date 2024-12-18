@@ -8,6 +8,7 @@ function Forgotpw() {
   const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
 
   // 인증 코드 요청
   const handleCodeRequest = async (e) => {
@@ -17,18 +18,18 @@ function Forgotpw() {
       setError('이메일을 입력해주세요.');
       return;
     }
+    setLoading(true); // 로딩 상태 활성화
+    setError('');
+    setMessage('');
 
     try {
-      const response = await fetch(
-        'http://15.165.223.198:3000/users/password-reset',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
+      const response = await fetch('/api/users/password-reset', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -41,6 +42,8 @@ function Forgotpw() {
       }
     } catch (error) {
       setError('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
+    } finally {
+      setLoading(false); // 로딩 상태 비활성화
     }
   };
 
@@ -54,19 +57,17 @@ function Forgotpw() {
     }
 
     try {
-      const response = await fetch(
-        'http://15.165.223.198:3000/users/password-reset/verify',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, code, newPassword }),
-        }
-      );
+      const response = await fetch('/api/users/password-reset/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, code, newPassword }),
+      });
 
       if (response.ok) {
         const data = await response.json();
+
         alert('비밀번호가 성공적으로 변경되었습니다.');
         window.location.href = '/login'; // 로그인 페이지로 이동
       } else {
@@ -98,7 +99,9 @@ function Forgotpw() {
           </InputGroup>
 
           <ButtonGroup>
-            <SendCodeButton type="submit">Send code</SendCodeButton>
+            <SendCodeButton type="submit" disabled={loading}>
+              {loading ? '코드를 보내는중...' : ' Send code'}
+            </SendCodeButton>
           </ButtonGroup>
 
           <Footer>

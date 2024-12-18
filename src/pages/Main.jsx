@@ -16,7 +16,7 @@ function Main() {
       </Header>
       <ContentContainer>
         {/* Section 1: 프로젝트 이름 소개 섹션 */}
-        <Section align="left" odd>
+        <Section align="left">
           <SectionContent>
             <h2>
               <FaProjectDiagram
@@ -34,7 +34,7 @@ function Main() {
         </Section>
 
         {/* Section 2: 프로젝트 요약(Abstract) */}
-        <Section align="right" even>
+        <Section align="right">
           <SectionContent>
             <h2>
               <FaRegListAlt style={{ color: '#a72b0c', marginRight: '10px' }} />
@@ -49,7 +49,7 @@ function Main() {
         </Section>
 
         {/* Section 3: 프로젝트 목표 */}
-        <Section align="left" odd>
+        <Section align="left">
           <SectionContent>
             <h2>
               <FaBullseye style={{ color: '#a72b0c', marginRight: '10px' }} />
@@ -64,7 +64,7 @@ function Main() {
         </Section>
 
         {/* Section 4: 프로젝트 기술 목록 */}
-        <Section align="right" even>
+        <Section align="right">
           <SectionContent>
             <h2>
               <FaTools style={{ color: '#a72b0c', marginRight: '10px' }} />
@@ -109,7 +109,7 @@ function Main() {
           </SectionContent>
         </Section>
         {/* Section 5: 팀원 소개 */}
-        <Section align="left" odd>
+        <Section align="left">
           <SectionContent>
             <h2>
               <FaUsers style={{ color: '#a72b0c', marginRight: '10px' }} />
@@ -170,16 +170,17 @@ const MainContainer = styled.div`
 
 const Section = styled.div`
   display: flex;
-  justify-content: ${({ odd }) => (odd ? 'flex-end' : 'flex-start')};
+  justify-content: ${({ align }) =>
+    align === 'left' ? 'flex-end' : 'flex-start'};
   padding: 50px 0;
   width: 99%;
 
-  &:nth-child(even) {
-    background-color: #fef6f4; /* 메인 색상과 어울리는 연한 배경색 */
-  }
-
   &:nth-child(odd) {
     background-color: #ffffff;
+  }
+
+  &:nth-child(even) {
+    background-color: #fef6f4;
   }
 `;
 

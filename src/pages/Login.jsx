@@ -27,7 +27,7 @@ function Login() {
 
     if (validateForm()) {
       try {
-        const response = await fetch('http://15.165.223.198:3000/users/login', {
+        const response = await fetch('/api/users/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
