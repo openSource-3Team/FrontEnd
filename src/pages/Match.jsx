@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from "axios"; // axios 추가
 import { useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import tempImage from '../images/ppotto.png';
@@ -8,16 +7,15 @@ const GlobalStyle = createGlobalStyle`
   html, body, #root {
     width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
   }
 `;
 
 function Match() {
   const [Click, setClick] = useState([]);
   const [roomies, setRoomies] = useState([]); // Roomie 상태
+  const [username, setUsername] = useState("사용자"); // 사용자 이름 상태
+  const [userGender, setUserGender] = useState(null); // 사용자 성별 상태 추가
   const navigate = useNavigate();
 
   // 필터 선택 함수
@@ -26,6 +24,34 @@ function Match() {
       setClick(Click.filter((filter) => filter !== value));
     } else {
       setClick([...Click, value]);
+    }
+  };
+
+  // 로그인된 사용자 정보 가져오는 함수 (임시 예시)
+  const fetchUserInfo = async () => {
+    try {
+      const userid = localStorage.getItem('userid');
+      console.log("현재 저장된 userid:", userid);
+      if (!userid) {
+        console.error("로그인 정보가 없습니다. userid가 존재하지 않습니다.");
+        return; // userid가 없으면 함수 종료
+      }
+
+      // GET 요청으로 사용자 정보 가져오기
+      const response = await fetch(`http://15.165.223.198:3000/users/${userid}`);
+      console.log(`요청한 URL: http://15.165.223.198:3000/users/${userid}`);
+
+      if (!response.ok) {
+        throw new Error(`사용자 정보 불러오기 실패: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("불러온 사용자 프로필 데이터:", data);
+
+      setUsername(data.name); // 사용자 이름 저장
+      setUserGender(data.gender); // 성별 상태 설정
+    } catch (error) {
+      console.error("사용자 정보 오류:", error);
     }
   };
 
@@ -60,28 +86,41 @@ function Match() {
         sleepingHabits: Click.filter((item) => ["코골이", "이갈이", "몽유병", "잠꼬대"].includes(item)),
         acLevel: Click.filter((item) => ["민감", "둔감"].includes(item)),
         mbti: Click.filter((item) => ["ESTJ", "ESTP", "ESFJ", "ESFP", "ENTJ", "ENTP", "ENFJ", "ENFP", "ISTJ", "ISTP", "ISFJ", "ISFP", "INTJ", "INTP", "INFJ", "INFP"].includes(item)),
+        gender: userGender || undefined, // 사용자 성별 조건 추가
       };
+
+
+      console.log("요청 본문:", requestBody); // 필터 요청 데이터 확인
 
       const response = await fetch("http://15.165.223.198:3000/users/filter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),
       });
-  
+
       if (!response.ok) {
         throw new Error(`서버 오류: ${response.status}`);
       }
-  
-      const data = await response.json(); // JSON 응답을 파싱
+
+      const data = await response.json();
+      console.log("필터링된 사용자 리스트:", data);
       setRoomies(data); // 상태에 저장
     } catch (error) {
-      console.error("사용자 데이터 불러오기 실패:", error);
+      console.error("필터링 오류:", error.message);
     }
   };
 
+
+
+
   useEffect(() => {
-    fetchRoomies();
-  }, [Click]); // Click 상태가 바뀔 때마다 호출
+    fetchUserInfo(); // 사용자 정보 가져오기
+  }, []);
+
+  useEffect(() => {
+    if (userGender) fetchRoomies(); // 필터링 조건에 사용자 성별이 포함될 때만 호출
+  }, [Click, userGender]); // 필터링 조건이 변경될 때마다 호출
+
 
   return (
     <>
@@ -107,7 +146,7 @@ function Match() {
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
-          <FilterLabel>단과대</FilterLabel>
+            <FilterLabel>단과대</FilterLabel>
             <FilterValues>
               {[
                 '전자정보공과대학',
@@ -334,11 +373,12 @@ function Match() {
             </FilterValues>
           </FilterGroup>
         </Filter>
-        <Explain> 아래는 ㅇㅇ님과 딱 맞는 루미들이에요. <br></br>
-          프로필을 눌러 세부사항도 확인해보세요.
-        </Explain>
 
         <HorizonLine text="Roomie" />
+
+        <Explain> 아래는 {username}님과 딱 맞는 루미들이에요. <br></br>
+          프로필을 눌러 세부사항도 확인해보세요.
+        </Explain>
 
         <ProfileContainer>
           {roomies.length > 0 ? (
@@ -375,10 +415,9 @@ const Container = styled.div`
 
 const Explain = styled.div`
 text-align: center;
-padding : 30px;
+padding : 10px;
 width: 60%; /* 부모 컨테이너의 전체 너비를 차지 */
 font-size:20px;
-
 `;
 
 const Filter = styled.div`
@@ -429,7 +468,8 @@ const HorizonLineContainer = styled.div`
   text-align: center;
   border-bottom: 1px solid #aaa;
   line-height: 0.1em;
-  margin-bottom : 20px;
+  margin-top : 40px;
+  margin-bottom : 10px;
 `;
 
 const HorizonLineText = styled.span`

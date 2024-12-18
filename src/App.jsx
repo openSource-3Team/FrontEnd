@@ -49,7 +49,7 @@ function AppContent() {
           <Route path="/write/:id" element={<Write />} />
           <Route path="/postview/:postId" element={<PostView />} />
           <Route path="/notification" element={<Notification />} />
-          <Route path="/roomie" element={<Roomie />} />
+          <Route path="/roomie/:id" element={<Roomie />} />
         </Routes>
       </Container>
     </>
