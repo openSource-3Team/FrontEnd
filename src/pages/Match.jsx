@@ -27,6 +27,34 @@ function Match() {
     }
   };
 
+  // 로그인된 사용자 정보 가져오는 함수 (임시 예시)
+  const fetchUserInfo = async () => {
+    try {
+      const userid = localStorage.getItem('userid');
+      console.log("현재 저장된 userid:", userid);
+      if (!userid) {
+        console.error("로그인 정보가 없습니다. userid가 존재하지 않습니다.");
+        return; // userid가 없으면 함수 종료
+      }
+
+      // GET 요청으로 사용자 정보 가져오기
+      const response = await fetch(`http://15.165.223.198:3000/users/${userid}`);
+      console.log(`요청한 URL: http://15.165.223.198:3000/users/${userid}`);
+
+      if (!response.ok) {
+        throw new Error(`사용자 정보 불러오기 실패: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("불러온 사용자 프로필 데이터:", data);
+
+      setUsername(data.name); // 사용자 이름 저장
+      setUserGender(data.gender); // 성별 상태 설정
+    } catch (error) {
+      console.error("사용자 정보 오류:", error);
+    }
+  };
+
   // 필터 조건에 따라 서버에서 사용자 프로필 데이터 가져오기
   const fetchRoomies = async () => {
     try {
@@ -58,52 +86,41 @@ function Match() {
         sleepingHabits: Click.filter((item) => ["코골이", "이갈이", "몽유병", "잠꼬대"].includes(item)),
         acLevel: Click.filter((item) => ["민감", "둔감"].includes(item)),
         mbti: Click.filter((item) => ["ESTJ", "ESTP", "ESFJ", "ESFP", "ENTJ", "ENTP", "ENFJ", "ENFP", "ISTJ", "ISTP", "ISFJ", "ISFP", "INTJ", "INTP", "INFJ", "INFP"].includes(item)),
-        gender: userGender, // 사용자 성별 조건 추가
+        gender: userGender || undefined, // 사용자 성별 조건 추가
       };
 
 
       console.log("요청 본문:", requestBody); // 필터 요청 데이터 확인
-      
+
       const response = await fetch("http://15.165.223.198:3000/users/filter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),
       });
-  
+
       if (!response.ok) {
         throw new Error(`서버 오류: ${response.status}`);
       }
-  
-      const data = await response.json(); // JSON 응답을 파싱
+
+      const data = await response.json();
+      console.log("필터링된 사용자 리스트:", data);
       setRoomies(data); // 상태에 저장
     } catch (error) {
-      console.error("사용자 데이터 불러오기 실패:", error);
+      console.error("필터링 오류:", error.message);
     }
   };
 
 
+
+
   useEffect(() => {
-    // 로그인된 사용자 정보 가져오는 함수 (임시 예시)
-    const fetchUserInfo = async () => {
-      try {
-        const response = await fetch("http://15.165.223.198:3000/user-info");
-        if (!response.ok) throw new Error("사용자 정보 불러오기 실패");
-
-        const data = await response.json();
-        setUsername(data.name); // 사용자 이름 저장
-        setUserGender(data.gender); // 성별 상태 설정
-      } catch (error) {
-        console.error("사용자 정보 오류:", error);
-      }
-    };
-
-    fetchUserInfo();
+    fetchUserInfo(); // 사용자 정보 가져오기
   }, []);
 
-   // 필터링 조건 변경될 때마다 호출
-   useEffect(() => {
-    if (userGender) fetchRoomies(); // 성별 정보가 존재할 때만 호출
-  }, [Click, userGender]);
+  useEffect(() => {
+    if (userGender) fetchRoomies(); // 필터링 조건에 사용자 성별이 포함될 때만 호출
+  }, [Click, userGender]); // 필터링 조건이 변경될 때마다 호출
+
 
   return (
     <>
@@ -129,7 +146,7 @@ function Match() {
             </FilterValues>
           </FilterGroup>
           <FilterGroup>
-          <FilterLabel>단과대</FilterLabel>
+            <FilterLabel>단과대</FilterLabel>
             <FilterValues>
               {[
                 '전자정보공과대학',
@@ -356,7 +373,7 @@ function Match() {
             </FilterValues>
           </FilterGroup>
         </Filter>
-        
+
         <HorizonLine text="Roomie" />
 
         <Explain> 아래는 {username}님과 딱 맞는 루미들이에요. <br></br>
