@@ -122,13 +122,11 @@ function Roomie() {
           <ProfileText> 취침시간 : {roomieData.sleepingTime}</ProfileText>
           <ProfileText> 소등시간 : {roomieData.lightOutTime}</ProfileText>
           <ProfileText> 샤워시간 : {roomieData.showerTime}</ProfileText>
+          <ProfileText> 흡연 여부 : {roomieData.isSmoking ? '흡연' : '비흡연'} </ProfileText>
           <ProfileText>
-            {' '}
-            흡연 여부 : {roomieData.isSmoking ? '흡연' : '비흡연'}{' '}
-          </ProfileText>
-          <ProfileText>
-            {' '}
-            잠버릇 : {roomieData.sleepingHabits.join(', ')}
+            잠버릇 : {roomieData.sleepingHabits && roomieData.sleepingHabits.length > 0
+              ? roomieData.sleepingHabits.join(', ')
+              : '없음'}
           </ProfileText>
           <ProfileText> 생활 패턴 : {roomieData.lifestyle}</ProfileText>
           <ProfileText> 알람소리 : {roomieData.alarm}</ProfileText>
@@ -178,7 +176,7 @@ const Container = styled.div`
 `;
 
 const ProfileInfo = styled.div`
-  width: 25%;
+  width: 540px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -198,7 +196,7 @@ const MessageSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 540px;
+  width: 600px;
 `;
 
 const MessageInput = styled.textarea`

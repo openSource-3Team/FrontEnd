@@ -8,8 +8,11 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+      background-color: #fef9f6; /* 부드러운 톤의 배경색 */
+
   }
 `;
+
 
 function Match() {
   const [Click, setClick] = useState([]);
@@ -48,119 +51,45 @@ function Match() {
 
       setUsername(data.name); // 사용자 이름 저장
       setUserGender(data.gender); // 성별 상태 설정
+
     } catch (error) {
       console.error('사용자 정보 오류:', error);
     }
   };
+
 
   // 필터 조건에 따라 서버에서 사용자 프로필 데이터 가져오기
   const fetchRoomies = async () => {
     try {
       // 필터 조건을 요청 본문에 포함
       const requestBody = {
-        dormitoryDuration: Click.filter((item) =>
-          ['4개월', '6개월', '12개월'].includes(item)
-        ),
-        department: Click.filter((item) =>
-          [
-            '전자정보공과대학',
-            '인공지능융합대학',
-            '공과대학',
-            '자연과학대학',
-            '경영대학',
-            '인문사회과학대학',
-            '정책법학대학',
-            '인제니움학부대학',
-          ].includes(item)
-        ),
-        studentId: Click.filter((item) =>
-          [
-            '16학번',
-            '17학번',
-            '18학번',
-            '19학번',
-            '20학번',
-            '21학번',
-            '22학번',
-            '23학번',
-            '24학번',
-          ].includes(item)
-        ),
-        wakeUpTime: Click.filter((item) =>
-          ['07:00', '08:00', '09:00', '10:00'].includes(item)
-        ),
-        sleepingTime: Click.filter((item) =>
-          ['21:00', '22:00', '23:00', '새벽'].includes(item)
-        ),
-        lightOutTime: Click.filter((item) =>
-          ['21:00', '22:00', '23:00', '24:00'].includes(item)
-        ),
-        showerTime: Click.filter((item) =>
-          ['외출 전', '귀가 후', '둘 다'].includes(item)
-        ),
-        isSmoking: Click.filter((item) =>
-          ['흡연자', '비흡연자'].includes(item)
-        ).map((val) => (val === '비흡연자' ? false : true)), // true/false 변환
-        cleaningFrequency: Click.filter((item) =>
-          [
-            '매일 항상 깨끗이',
-            '2~3일에 한 번씩',
-            '일주일에 한 번',
-            '한 달에 한 번',
-            '아예 안해요',
-          ].includes(item)
-        ),
-        itemSharingPreference: Click.filter((item) =>
-          ['공유해요', '공유하기 싫어요'].includes(item)
-        ),
-        gamePreference: Click.filter((item) =>
-          [
-            'PC 게임',
-            '모바일 게임',
-            '가끔 이해할 수 있어요',
-            '아예 안돼요',
-          ].includes(item)
-        ),
-        studyPreference: Click.filter((item) =>
-          [
-            '스탠드 켜고 하면 가능해요',
-            '불 켜고 해도 돼요',
-            '공부 안돼요',
-          ].includes(item)
-        ),
-        foodPreference: Click.filter((item) =>
-          ['음료', '간단한 간식', '식사', '배달음식', '섭취 안돼요'].includes(
-            item
-          )
-        ),
-        lifestyle: Click.filter((item) =>
-          ['아침형', '저녁형', '새벽형'].includes(item)
-        ),
-        sleepingHabits: Click.filter((item) =>
-          ['코골이', '이갈이', '몽유병', '잠꼬대'].includes(item)
-        ),
-        acLevel: Click.filter((item) => ['민감', '둔감'].includes(item)),
-        mbti: Click.filter((item) =>
-          [
-            'ESTJ',
-            'ESTP',
-            'ESFJ',
-            'ESFP',
-            'ENTJ',
-            'ENTP',
-            'ENFJ',
-            'ENFP',
-            'ISTJ',
-            'ISTP',
-            'ISFJ',
-            'ISFP',
-            'INTJ',
-            'INTP',
-            'INFJ',
-            'INFP',
-          ].includes(item)
-        ),
-        gender: userGender || undefined, // 사용자 성별 조건 추가
+        dormitoryDuration: Click.filter((item) => ["4개월", "6개월", "12개월"].includes(item)),
+        department: Click.filter((item) => [
+          "전자정보공과대학",
+          "인공지능융합대학",
+          "공과대학",
+          "자연과학대학",
+          "경영대학",
+          "인문사회과학대학",
+          "정책법학대학",
+          "인제니움학부대학",
+        ].includes(item)),
+        studentId: Click.filter((item) => ["16학번", "17학번", "18학번", "19학번", "20학번", "21학번", "22학번", "23학번", "24학번"].includes(item)),
+        wakeUpTime: Click.filter((item) => ["07:00", "08:00", "09:00", "10:00"].includes(item)),
+        sleepingTime: Click.filter((item) => ["21:00", "22:00", "23:00", "새벽"].includes(item)),
+        lightOutTime: Click.filter((item) => ["21:00", "22:00", "23:00", "24:00"].includes(item)),
+        showerTime: Click.filter((item) => ["외출 전", "귀가 후", "둘 다"].includes(item)),
+        isSmoking: Click.filter((item) => ["흡연자", "비흡연자"].includes(item)).map((val) => val === "비흡연자" ? false : true), // true/false 변환
+        cleaningFrequency: Click.filter((item) => ["매일 항상 깨끗이", "2~3일에 한 번씩", "일주일에 한 번", "한 달에 한 번", "아예 안해요"].includes(item)),
+        itemSharingPreference: Click.filter((item) => ["공유해요", "공유하기 싫어요"].includes(item)),
+        gamePreference: Click.filter((item) => ["PC 게임", "모바일 게임", "가끔 이해할 수 있어요", "아예 안돼요"].includes(item)),
+        studyPreference: Click.filter((item) => ["스탠드 켜고 하면 가능해요", "불 켜고 해도 돼요", "공부 안돼요"].includes(item)),
+        foodPreference: Click.filter((item) => ["음료", "간단한 간식", "식사", "배달음식", "섭취 안돼요"].includes(item)),
+        lifestyle: Click.filter((item) => ["아침형", "저녁형", "새벽형"].includes(item)),
+        sleepingHabits: Click.filter((item) => ["코골이", "이갈이", "몽유병", "잠꼬대"].includes(item)),
+        acLevel: Click.filter((item) => ["민감", "둔감"].includes(item)),
+        mbti: Click.filter((item) => ["ESTJ", "ESTP", "ESFJ", "ESFP", "ENTJ", "ENTP", "ENFJ", "ENFP", "ISTJ", "ISTP", "ISFJ", "ISFP", "INTJ", "INTP", "INFJ", "INFP"].includes(item)),
+        ...(userGender && { gender: userGender }), // gender가 null이 아니면 추가
       };
 
       console.log('요청 본문:', requestBody); // 필터 요청 데이터 확인
@@ -188,8 +117,8 @@ function Match() {
   }, []);
 
   useEffect(() => {
-    if (userGender) fetchRoomies(); // 필터링 조건에 사용자 성별이 포함될 때만 호출
-  }, [Click, userGender]); // 필터링 조건이 변경될 때마다 호출
+    fetchRoomies(); // 조건 없이 호출
+  }, [Click, userGender]);
 
   return (
     <>
@@ -566,6 +495,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center; /* 모든 콘텐츠를 중앙 정렬 */
+    background-color: #fef9f6; /* 부드러운 톤의 배경색 */
+
 `;
 
 const Explain = styled.div`
@@ -576,11 +507,16 @@ const Explain = styled.div`
 `;
 
 const Filter = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 60%;
-  align-items: flex-start; /* 내부 요소 왼쪽 정렬 */
+display: flex;
+flex-direction: column;
+gap: 20px;
+width:55%;
+align-items: flex-start; /* 내부 요소 왼쪽 정렬 */
+padding : 20px;
+background: #ffffff;
+border-radius: 12px;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+border: 2px solid #a72b0c; /* 포인트 색으로 강조 */
 `;
 
 const FilterGroup = styled.div`
@@ -619,7 +555,7 @@ const FilterValue = styled.div`
 `;
 
 const HorizonLineContainer = styled.div`
-  width: 60%;
+  width: 57%;
   text-align: center;
   border-bottom: 1px solid #aaa;
   line-height: 0.1em;
@@ -628,7 +564,7 @@ const HorizonLineContainer = styled.div`
 `;
 
 const HorizonLineText = styled.span`
-  background: #fff;
+  background: #fef9f6;
   padding: 0 10px;
 `;
 
@@ -658,7 +594,9 @@ const Profile = styled.div`
   margin: 15px 0 15px;
 
   &:hover {
-    background-color: #f08a77;
+    background-color: #f5e9e7; /* 부드러운 포인트 색으로 변경 */
+    transform: scale(1.001); /* 약간의 확대 효과 */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* 그림자 강화 */
   }
 `;
 
