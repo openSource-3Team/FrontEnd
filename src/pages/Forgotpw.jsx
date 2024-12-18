@@ -67,6 +67,7 @@ function Forgotpw() {
 
       if (response.ok) {
         const data = await response.json();
+
         alert('비밀번호가 성공적으로 변경되었습니다.');
         window.location.href = '/login'; // 로그인 페이지로 이동
       } else {
