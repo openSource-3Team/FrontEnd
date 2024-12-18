@@ -8,6 +8,7 @@ function Forgotpw() {
   const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
 
   // 인증 코드 요청
   const handleCodeRequest = async (e) => {
@@ -17,6 +18,9 @@ function Forgotpw() {
       setError('이메일을 입력해주세요.');
       return;
     }
+    setLoading(true); // 로딩 상태 활성화
+    setError('');
+    setMessage('');
 
     try {
       const response = await fetch(
@@ -41,6 +45,8 @@ function Forgotpw() {
       }
     } catch (error) {
       setError('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
+    } finally {
+      setLoading(false); // 로딩 상태 비활성화
     }
   };
 
@@ -99,7 +105,9 @@ function Forgotpw() {
           </InputGroup>
 
           <ButtonGroup>
-            <SendCodeButton type="submit">Send code</SendCodeButton>
+            <SendCodeButton type="submit" disabled={loading}>
+              {loading ? '코드를 보내는중...' : ' Send code'}
+            </SendCodeButton>
           </ButtonGroup>
 
           <Footer>
